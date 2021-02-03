@@ -11,7 +11,6 @@ const Profile = () => {
 
   useEffect(() => {
     if (!token) {
-      console.log('step 1');
       const parsed = queryString.parse(window.location.search);
       console.log(parsed);
       const fetchCode = async () => {
@@ -24,8 +23,7 @@ const Profile = () => {
       };
       fetchCode();
     } else {
-      console.log('step 2');
-      // setToken(token);
+      console.log('we are in the ELSE of the useEffect');
     }
   }, []);
 
@@ -72,7 +70,6 @@ const Profile = () => {
     });
     const favMerchant = mode(merchantArray);
     setMerchant(favMerchant);
-    // console.log('fav merchant', favMerchant);
 
     const favMerchantArray = expenses.filter((item) => {
       return item.description === favMerchant;
@@ -82,9 +79,6 @@ const Profile = () => {
     }, 0);
     const convertedAmount = Math.abs(amountSpentOnMerchant).toFixed(2);
     setTotalAmount(convertedAmount);
-    // console.log(
-    //   `Your most recurrent spending is at: ${favMerchant} - total spent in the last year: ${amountSpentOnMerchant}`
-    // );
   };
 
   return (

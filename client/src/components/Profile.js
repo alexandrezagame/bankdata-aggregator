@@ -3,6 +3,8 @@ import queryString from 'query-string';
 
 const Profile = () => {
   const [expenses, setExpenses] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [merchant, setMerchant] = useState('');
   const [totalRecurrences, setTotalRecurrences] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
@@ -13,7 +15,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!token) {
-      console.log('step 1');
+      // console.log('step 1');
       const parsed = queryString.parse(window.location.search);
       console.log(parsed);
       const fetchCode = async () => {
@@ -30,12 +32,47 @@ const Profile = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchDate = async () => {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/user/${token}`
+      );
+      const data = await response.json();
+      // console.log('getuserdata', data);
+
+      const s = new Date(
+        data.response[data.response.length - 1].originalDate
+      ).toLocaleDateString('en-GB');
+
+      setStartDate(s);
+      const x = new Date(data.response[0].originalDate).toLocaleDateString(
+        'en-GB'
+      );
+      setEndDate(x);
+    };
+    fetchDate();
+  }, []);
+
   const getTotalExpenses = async (token) => {
     const response = await fetch(
       `http://localhost:8080/api/auth/user/${token}`
     );
     const data = await response.json();
-    // console.log('getuserdata', data);
+    console.log('getuserdata', data);
+    console.log('get date', data.originalDate);
+
+    const s = new Date(
+      data.response[data.response.length - 1].originalDate
+    ).toLocaleDateString('en-GB');
+    console.log(s);
+    setStartDate(s);
+    const x = new Date(data.response[0].originalDate).toLocaleDateString(
+      'en-GB'
+    );
+    setEndDate(x);
+
+    // console.log(`from ${s} to ${x}`);
+
     const expenses = data.response.filter((item) => {
       return item.categoryType === 'EXPENSES';
     });
@@ -45,7 +82,6 @@ const Profile = () => {
     }, 0);
     const convertedTotalExp = Math.abs(totalExp).toFixed(0);
     setExpenses(convertedTotalExp);
-    // console.log('SUM', convertedTotalExp);
   };
 
   function mode(arr) {
@@ -70,7 +106,6 @@ const Profile = () => {
     expenses.map((merchant) => {
       merchantArray.push(merchant.description);
     });
-    console.log('all merchants', merchantArray);
     const favMerchant = mode(merchantArray);
     setMerchant(favMerchant);
 
@@ -125,6 +160,13 @@ const Profile = () => {
   return (
     <div>
       <h1>Hello there!</h1>
+      {startDate && (
+        <div>
+          <h3>
+            Data collected from {startDate} to {endDate}
+          </h3>
+        </div>
+      )}
       <button onClick={() => getTotalExpenses(token)}>See Expenses</button>
       {expenses && (
         <p>

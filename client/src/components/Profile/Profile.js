@@ -185,7 +185,6 @@ const Profile = () => {
   };
 
   const handleChange = (e) => {
-    console.log('here?');
     getMerchantByCategory(token, e.target.value);
   };
 
@@ -252,9 +251,11 @@ const Profile = () => {
               <option value={category.id}>{category.primaryName}</option>
             ))}
           </select>
-          {merchantByCategory.map((list) => {
-            return <p>{list.description}</p>;
-          })}
+          <div>
+            {merchantByCategory.map((list) => {
+              return <p>{list.description}</p>;
+            })}
+          </div>
         </div>
       ) : (
         ''

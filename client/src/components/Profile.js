@@ -161,6 +161,15 @@ const Profile = () => {
                 <p key={merchant.name}>
                   <b>{merchant.name}</b> - total spent in the last year:{' '}
                   <b>{Math.abs(merchant.value).toFixed(0)} sek</b>
+                  <img
+                    src={`https://logo.clearbit.com/${merchant.name
+                      .split(/\s/)
+                      .join('')}.com`}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://source.unsplash.com/random';
+                    }}
+                  ></img>
                 </p>
               );
             })

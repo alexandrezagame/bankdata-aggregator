@@ -3,8 +3,8 @@ import queryString from 'query-string';
 
 const Profile = () => {
   const [expenses, setExpenses] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [timestampInfo, setTimestampInfo] = useState({});
+
   const [merchant, setMerchant] = useState('');
   const [totalRecurrences, setTotalRecurrences] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
@@ -38,17 +38,16 @@ const Profile = () => {
         `http://localhost:8080/api/auth/user/${token}`
       );
       const data = await response.json();
-      // console.log('getuserdata', data);
 
       const s = new Date(
         data.response[data.response.length - 1].originalDate
       ).toLocaleDateString('en-GB');
 
-      setStartDate(s);
       const x = new Date(data.response[0].originalDate).toLocaleDateString(
         'en-GB'
       );
-      setEndDate(x);
+
+      setTimestampInfo({ ...timestampInfo, startDate: s, endDate: x });
     };
     fetchDate();
   }, []);
@@ -58,20 +57,6 @@ const Profile = () => {
       `http://localhost:8080/api/auth/user/${token}`
     );
     const data = await response.json();
-    console.log('getuserdata', data);
-    console.log('get date', data.originalDate);
-
-    const s = new Date(
-      data.response[data.response.length - 1].originalDate
-    ).toLocaleDateString('en-GB');
-    console.log(s);
-    setStartDate(s);
-    const x = new Date(data.response[0].originalDate).toLocaleDateString(
-      'en-GB'
-    );
-    setEndDate(x);
-
-    // console.log(`from ${s} to ${x}`);
 
     const expenses = data.response.filter((item) => {
       return item.categoryType === 'EXPENSES';
@@ -160,10 +145,11 @@ const Profile = () => {
   return (
     <div>
       <h1>Hello there!</h1>
-      {startDate && (
+      {timestampInfo.startDate && (
         <div>
           <h3>
-            Data collected from {startDate} to {endDate}
+            Data collected from {timestampInfo.startDate} to{' '}
+            {timestampInfo.endDate}
           </h3>
         </div>
       )}

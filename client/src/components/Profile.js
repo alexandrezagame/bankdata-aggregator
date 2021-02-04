@@ -4,6 +4,7 @@ import queryString from 'query-string';
 const Profile = () => {
   const [expenses, setExpenses] = useState('');
   const [merchant, setMerchant] = useState('');
+  const [totalRecurrences, setTotalRecurrences] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
   const [topMerchants, setTopMerchants] = useState([]);
   const [token, setToken] = useState(
@@ -61,7 +62,6 @@ const Profile = () => {
       `http://localhost:8080/api/auth/user/${token}`
     );
     const data = await response.json();
-    // console.log('getuserdata', data);
     const expenses = data.response.filter((item) => {
       return item.categoryType === 'EXPENSES';
     });
@@ -70,8 +70,14 @@ const Profile = () => {
     expenses.map((merchant) => {
       merchantArray.push(merchant.description);
     });
+    console.log('all merchants', merchantArray);
     const favMerchant = mode(merchantArray);
     setMerchant(favMerchant);
+
+    const totalRecurrencesAtFavMerchant = merchantArray.filter(
+      (obj) => obj === favMerchant
+    ).length;
+    setTotalRecurrences(totalRecurrencesAtFavMerchant);
 
     const favMerchantArray = expenses.filter((item) => {
       return item.description === favMerchant;
@@ -109,26 +115,11 @@ const Profile = () => {
       combinedAmountOfMerchant.push({ name: prop, value: merchant[prop] });
     }
 
-    // console.log('DOES THIS WORK?', combinedAmountOfMerchant);
-
     const sortedHighestSpendingMerchant = combinedAmountOfMerchant.sort(
       (a, b) => parseFloat(a.value) - parseFloat(b.value)
     );
 
-    // setTopMerchants(
-    //   sortedHighestSpendingMerchant[0],
-    //   sortedHighestSpendingMerchant[1],
-    //   sortedHighestSpendingMerchant[2]
-    // );
     setTopMerchants(sortedHighestSpendingMerchant);
-    console.log('hello');
-    console.log('topmerchants', topMerchants);
-
-    // console.log(
-    //   `top 3 highest spenders 1. ${
-    //     sortedHighestSpendingMerchant[0].name
-    //   } - ${Math.abs(sortedHighestSpendingMerchant[0].value)} sek`
-    // );
   };
 
   return (
@@ -147,7 +138,8 @@ const Profile = () => {
       {merchant && (
         <p>
           Your most recurrent spending is at: <b>{merchant}</b> - total spent in
-          the last year: <b>{totalAmount} sek</b>
+          the last year: <b>{totalAmount} sek</b> - Amount of transactions:{' '}
+          <b>{totalRecurrences}</b>
         </p>
       )}
       <br></br>
@@ -167,7 +159,8 @@ const Profile = () => {
                       .join('')}.com`}
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'https://source.unsplash.com/random';
+                      e.target.src =
+                        'https://source.unsplash.com/random/200x200';
                     }}
                   ></img>
                 </p>

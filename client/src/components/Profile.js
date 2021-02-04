@@ -10,6 +10,7 @@ const Profile = () => {
   const [totalAmount, setTotalAmount] = useState('');
   const [topMerchants, setTopMerchants] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [merchantByCategory, setMerchantByCategory] = useState([]);
   const [token, setToken] = useState(
     window.localStorage.getItem('token') || ''
   );
@@ -74,6 +75,21 @@ const Profile = () => {
     fetchCategories();
   }, []);
 
+  const getMerchantByCategory = async (token, categoryId) => {
+    const response = await fetch(
+      `http://localhost:8080/api/auth/user/${token}`
+    );
+    const data = await response.json();
+    const expenses = data.response.filter((item) => {
+      return item.categoryType === 'EXPENSES';
+    });
+
+    const merchantCategory = expenses.filter((item) => {
+      return item.categoryId === categoryId;
+    });
+    setMerchantByCategory(merchantCategory);
+  };
+
   const getTotalExpenses = async (token) => {
     const response = await fetch(
       `http://localhost:8080/api/auth/user/${token}`
@@ -86,16 +102,7 @@ const Profile = () => {
     const incomes = data.response.filter((item) => {
       return item.categoryType === 'INCOME';
     });
-    console.log('data', data.response[0].id);
-
-    // incomes.map((item) => {
-    //   console.log(new Date(item.originalDate).toLocaleDateString('en-GB'));
-    // });
-
-    // const monthlyExpenses = [
-    //   { month: 01, year: 2020, expense: 0 },
-    //   { month: 02, year: 2020, expense: 0 },
-    // ];
+    console.log('data', data);
 
     const totalExp = expenses.reduce((a, b) => {
       return a + b.amount;
@@ -103,18 +110,6 @@ const Profile = () => {
     const convertedTotalExp = Math.abs(totalExp).toFixed(0);
     setExpenses(convertedTotalExp);
   };
-
-  // const getCategories = async (token) => {
-  //   const response = await fetch(
-  //     `http://localhost:8080/api/auth/categories/${token}`
-  //   );
-  //   const data = await response.json();
-  //   const expenseCategories = data.response.filter((category) => {
-  //     return category.type === 'EXPENSES';
-  //   });
-  //   setCategories(expenseCategories);
-  //   console.log('CATEGORIIIIIES', expenseCategories);
-  // };
 
   function mode(arr) {
     return arr
@@ -189,6 +184,11 @@ const Profile = () => {
     setTopMerchants(sortedHighestSpendingMerchant);
   };
 
+  const handleChange = (e) => {
+    console.log('here?');
+    getMerchantByCategory(token, e.target.value);
+  };
+
   return (
     <div>
       <h1>Hello there!</h1>
@@ -247,13 +247,14 @@ const Profile = () => {
 
       {categories.length > 1 ? (
         <div className="select-container">
-          <select>
+          <select onChange={handleChange}>
             {categories.map((category) => (
-              <option value={category.primaryName}>
-                {category.primaryName}
-              </option>
+              <option value={category.id}>{category.primaryName}</option>
             ))}
           </select>
+          {merchantByCategory.map((list) => {
+            return <p>{list.description}</p>;
+          })}
         </div>
       ) : (
         ''

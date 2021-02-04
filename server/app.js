@@ -36,7 +36,7 @@ const getUserData = async (token) => {
       // 'Content-Type': 'application/json',
     },
   });
-  console.log('RESPONSE IN GETUSER', response);
+  // console.log('RESPONSE IN GETUSER', response);
 
   const data = await response.json();
   return data;
@@ -79,7 +79,7 @@ async function getAccessToken(code) {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
   });
-  console.log('RESPONSE', response);
+  // console.log('RESPONSE', response);
   return handleResponse(response);
 }
 

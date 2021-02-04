@@ -9,6 +9,7 @@ const Profile = () => {
   const [totalRecurrences, setTotalRecurrences] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
   const [topMerchants, setTopMerchants] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [token, setToken] = useState(
     window.localStorage.getItem('token') || ''
   );
@@ -52,15 +53,49 @@ const Profile = () => {
     fetchDate();
   }, []);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/categories/${token}`
+      );
+      const data = await response.json();
+      const expenseCategories = data.response.filter((category) => {
+        return category.type === 'EXPENSES';
+      });
+
+      let listCat = expenseCategories.map((o) => o.primaryName);
+      let filtered = expenseCategories.filter(
+        ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
+      );
+
+      console.log(filtered);
+      setCategories(filtered);
+    };
+    fetchCategories();
+  }, []);
+
   const getTotalExpenses = async (token) => {
     const response = await fetch(
       `http://localhost:8080/api/auth/user/${token}`
     );
     const data = await response.json();
-
+    // console.log(data);
     const expenses = data.response.filter((item) => {
       return item.categoryType === 'EXPENSES';
     });
+    const incomes = data.response.filter((item) => {
+      return item.categoryType === 'INCOME';
+    });
+    console.log('data', data.response[0].id);
+
+    // incomes.map((item) => {
+    //   console.log(new Date(item.originalDate).toLocaleDateString('en-GB'));
+    // });
+
+    // const monthlyExpenses = [
+    //   { month: 01, year: 2020, expense: 0 },
+    //   { month: 02, year: 2020, expense: 0 },
+    // ];
 
     const totalExp = expenses.reduce((a, b) => {
       return a + b.amount;
@@ -68,6 +103,18 @@ const Profile = () => {
     const convertedTotalExp = Math.abs(totalExp).toFixed(0);
     setExpenses(convertedTotalExp);
   };
+
+  // const getCategories = async (token) => {
+  //   const response = await fetch(
+  //     `http://localhost:8080/api/auth/categories/${token}`
+  //   );
+  //   const data = await response.json();
+  //   const expenseCategories = data.response.filter((category) => {
+  //     return category.type === 'EXPENSES';
+  //   });
+  //   setCategories(expenseCategories);
+  //   console.log('CATEGORIIIIIES', expenseCategories);
+  // };
 
   function mode(arr) {
     return arr
@@ -196,6 +243,21 @@ const Profile = () => {
             })
           : ''}
       </div>
+      <br></br>
+
+      {categories.length > 1 ? (
+        <div className="select-container">
+          <select>
+            {categories.map((category) => (
+              <option value={category.primaryName}>
+                {category.primaryName}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   );
 };

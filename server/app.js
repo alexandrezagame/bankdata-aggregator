@@ -42,10 +42,31 @@ const getUserData = async (token) => {
   return data;
 };
 
+const getUserCategories = async (token) => {
+  const response = await fetch('https://api.tink.com/api/v1/categories', {
+    headers: {
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
+      // 'Content-Type': 'application/json',
+    },
+  });
+  // console.log('RESPONSE IN GETUSER', response);
+
+  const data = await response.json();
+  return data;
+};
+
 app.get('/api/auth/user/:code', async (req, res) => {
   const code = req.params.code;
 
   const response = await getUserData(code);
+  res.send({ response });
+});
+
+app.get('/api/auth/categories/:code', async (req, res) => {
+  const code = req.params.code;
+
+  const response = await getUserCategories(code);
   res.send({ response });
 });
 

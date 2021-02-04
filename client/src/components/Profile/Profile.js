@@ -2,28 +2,32 @@ import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import useStyles from './styles';
 
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import {
+  Drawer,
+  CssBaseline,
+  CardContent,
+  Card,
+  Select,
+  AppBar,
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
+
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import BusinessIcon from '@material-ui/icons/Business';
+import CategoryIcon from '@material-ui/icons/Category';
 import Looks5Icon from '@material-ui/icons/Looks5';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CountUp from 'react-countup';
-
 import logo from '../../assets/tinklogo.png';
 
 const Profile = () => {
@@ -96,7 +100,6 @@ const Profile = () => {
         ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
       );
 
-      console.log(filtered);
       setCategories(filtered);
     };
     fetchCategories();
@@ -115,6 +118,7 @@ const Profile = () => {
       return item.categoryId === categoryId;
     });
     setMerchantByCategory(merchantCategory);
+    console.log('amount of the expense', data.response);
   };
 
   const getTotalExpenses = async (token) => {
@@ -222,11 +226,9 @@ const Profile = () => {
           <Toolbar>
             <Typography variant="h6" noWrap>
               {timestampInfo.startDate && (
-                <div>
-                  <h3>
-                    Data collected from {timestampInfo.startDate} to{' '}
-                    {timestampInfo.endDate}
-                  </h3>
+                <div className={classes.bannerText}>
+                  Displaying data collected since {timestampInfo.startDate}{' '}
+                  until {timestampInfo.endDate}
                 </div>
               )}
             </Typography>
@@ -275,62 +277,71 @@ const Profile = () => {
               <ListItemText />
             </ListItem>
           </List>
+          <Divider />
+
+          <List>
+            <ListItem button>
+              <CategoryIcon />
+              <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">
+                  Categories
+                </InputLabel>
+                {categories.length > 1 ? (
+                  <Select onChange={handleChange}>
+                    {categories.map((category) => (
+                      <MenuItem value={category.id}>
+                        {category.primaryName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                ) : (
+                  ''
+                )}
+              </FormControl>
+            </ListItem>
+          </List>
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
-          <FormControl className={classes.formControl}>
-            <InputLabel id="demo-simple-select-label">Categories</InputLabel>
-            {categories.length > 1 ? (
-              <Select onChange={handleChange}>
-                {categories.map((category) => (
-                  <MenuItem value={category.id}>
-                    {category.primaryName}
-                  </MenuItem>
-                ))}
-              </Select>
-            ) : (
-              ''
-            )}
-          </FormControl>
           <Typography paragraph>
             {merchantByCategory.map((list) => {
               return <p>{list.description}</p>;
             })}
           </Typography>
-          <Divider />
 
-          <Typography paragraph>
-            {expenses && (
-              <p>
-                Your total expenses are:{' '}
-                <b>
-                  <CountUp
-                    start={0}
-                    end={expenses}
-                    duration={2.5}
-                    separator=","
-                  />{' '}
-                  sek
-                </b>
-              </p>
-            )}
-          </Typography>
+          {expenses && (
+            <Card className={classes.cards}>
+              <CardContent className={classes.cardsContent}>
+                <Typography className={classes.title}>
+                  Your total expenses are:{' '}
+                  <b className={classes.information}>
+                    <CountUp
+                      start={0}
+                      end={expenses}
+                      duration={2.5}
+                      separator=","
+                    />{' '}
+                    sek
+                  </b>
+                </Typography>
+              </CardContent>
+            </Card>
+          )}
 
           {merchant && (
-            <Card className={classes.root}>
-              <CardContent>
-                <Typography
-                  className={classes.title}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Most Recurrent Merchant: <b>{merchant}</b>
+            <Card className={classes.cards}>
+              <CardContent className={classes.cardsContent}>
+                <Typography className={classes.title}>
+                  Most Recurrent Merchant:{' '}
+                  <b className={classes.information}>{merchant}</b>
                 </Typography>
                 <Typography variant="h5" component="h5">
-                  Total spent in the last year: <b>{totalAmount} sek</b>
+                  Total spent in the last year:{' '}
+                  <b className={classes.information}>{totalAmount} sek</b>
                   <br></br>
-                  Amount of transactions: <b>{totalRecurrences}</b>
+                  Amount of transactions:{' '}
+                  <b className={classes.information}>{totalRecurrences}</b>
                 </Typography>
               </CardContent>
             </Card>
@@ -341,7 +352,8 @@ const Profile = () => {
               ? topMerchants.slice(0, 5).map((merchant) => {
                   return (
                     <p key={merchant.name}>
-                      <b>{merchant.name}</b> - total spent in the last year:{' '}
+                      <b className={classes.information}>{merchant.name}</b> -
+                      total spent in the last year:{' '}
                       <b>{Math.abs(merchant.value).toFixed(0)} sek</b>
                       <img
                         className={classes.merchantLogo}

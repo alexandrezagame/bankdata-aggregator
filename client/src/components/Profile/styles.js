@@ -4,9 +4,26 @@ export default makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
+  cards: {
+    marginBottom: '2rem',
+    backgroundColor: '#03424B',
+    color: 'white',
+    width: '50vw',
+    padding: '1rem',
+    margin: '0 auto',
+  },
+  bannerText: {
+    margin: '0 auto',
+  },
   appBar: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#427882',
+  },
+  information: {
+    color: '#F89672',
   },
   drawer: {
     width: drawerWidth,

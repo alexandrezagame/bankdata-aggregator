@@ -1,7 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
+import useStyles from './styles';
+import Drawer from '@material-ui/core/Drawer';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import BusinessIcon from '@material-ui/icons/Business';
+import Looks5Icon from '@material-ui/icons/Looks5';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+
+import logo from '../../assets/tinklogo.png';
 
 const Profile = () => {
+  const classes = useStyles();
+
   const [expenses, setExpenses] = useState('');
   const [timestampInfo, setTimestampInfo] = useState({});
 
@@ -95,7 +119,6 @@ const Profile = () => {
       `http://localhost:8080/api/auth/user/${token}`
     );
     const data = await response.json();
-    // console.log(data);
     const expenses = data.response.filter((item) => {
       return item.categoryType === 'EXPENSES';
     });
@@ -189,78 +212,144 @@ const Profile = () => {
   };
 
   return (
-    <div>
-      <h1>Hello there!</h1>
-      {timestampInfo.startDate && (
-        <div>
-          <h3>
-            Data collected from {timestampInfo.startDate} to{' '}
-            {timestampInfo.endDate}
-          </h3>
-        </div>
-      )}
-      <button onClick={() => getTotalExpenses(token)}>See Expenses</button>
-      {expenses && (
-        <p>
-          Your total expenses are: <b>{expenses} sek</b>
-        </p>
-      )}
-      <br></br>
-      <button onClick={() => getReccurentMerchant(token)}>
-        See Most recurrent Merchant
-      </button>
-      {merchant && (
-        <p>
-          Your most recurrent spending is at: <b>{merchant}</b> - total spent in
-          the last year: <b>{totalAmount} sek</b> - Amount of transactions:{' '}
-          <b>{totalRecurrences}</b>
-        </p>
-      )}
-      <br></br>
-      <button onClick={() => getHighestSpendingMerchants(token)}>
-        See TOP 3 Highest spending Merchants
-      </button>
-      <div>
-        {topMerchants.length > 0
-          ? topMerchants.slice(0, 5).map((merchant) => {
-              return (
-                <p key={merchant.name}>
-                  <b>{merchant.name}</b> - total spent in the last year:{' '}
-                  <b>{Math.abs(merchant.value).toFixed(0)} sek</b>
-                  <img
-                    src={`https://logo.clearbit.com/${merchant.name
-                      .split(/\s/)
-                      .join('')}.com`}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        'https://source.unsplash.com/random/200x200';
-                    }}
-                  ></img>
-                </p>
-              );
-            })
-          : ''}
-      </div>
-      <br></br>
+    <>
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
+            <Typography variant="h6" noWrap>
+              {timestampInfo.startDate && (
+                <div>
+                  <h3>
+                    Data collected from {timestampInfo.startDate} to{' '}
+                    {timestampInfo.endDate}
+                  </h3>
+                </div>
+              )}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          className={classes.drawer}
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          anchor="left"
+        >
+          <div className={classes.toolbar}>
+            <img src={logo} className={classes.logo} />
+          </div>
+          <Divider />
+          <List>
+            <ListItem button>
+              <MonetizationOnIcon />
+              <ListItemIcon onClick={() => getTotalExpenses(token)}>
+                <div className={classes.menuTitles}>See Expenses</div>
+              </ListItemIcon>
+              <ListItemText />
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            <ListItem button>
+              <BusinessIcon />
+              <ListItemIcon onClick={() => getReccurentMerchant(token)}>
+                <div className={classes.menuTitles}>
+                  Most Recurrent Merchant
+                </div>
+              </ListItemIcon>
+              <ListItemText />
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            <ListItem button>
+              <Looks5Icon />
+              <ListItemIcon onClick={() => getHighestSpendingMerchants(token)}>
+                <div className={classes.menuTitles}>Top 5 spendings</div>
+              </ListItemIcon>
+              <ListItemText />
+            </ListItem>
+          </List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
 
-      {categories.length > 1 ? (
-        <div className="select-container">
-          <select onChange={handleChange}>
-            {categories.map((category) => (
-              <option value={category.id}>{category.primaryName}</option>
-            ))}
-          </select>
-          <div>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-label">Categories</InputLabel>
+            {categories.length > 1 ? (
+              <Select onChange={handleChange}>
+                {categories.map((category) => (
+                  <MenuItem value={category.id}>
+                    {category.primaryName}
+                  </MenuItem>
+                ))}
+              </Select>
+            ) : (
+              ''
+            )}
+          </FormControl>
+          <Typography paragraph>
             {merchantByCategory.map((list) => {
               return <p>{list.description}</p>;
             })}
-          </div>
-        </div>
-      ) : (
-        ''
-      )}
-    </div>
+          </Typography>
+          <Divider />
+
+          <Typography paragraph>
+            {expenses && (
+              <p>
+                Your total expenses are: <b>{expenses} sek</b>
+              </p>
+            )}
+          </Typography>
+
+          {merchant && (
+            <Card className={classes.root}>
+              <CardContent>
+                <Typography
+                  className={classes.title}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Most Recurrent Merchant: <b>{merchant}</b>
+                </Typography>
+                <Typography variant="h5" component="h5">
+                  Total spent in the last year: <b>{totalAmount} sek</b>
+                  <br></br>
+                  Amount of transactions: <b>{totalRecurrences}</b>
+                </Typography>
+              </CardContent>
+            </Card>
+          )}
+
+          <Typography paragraph>
+            {topMerchants.length > 0
+              ? topMerchants.slice(0, 5).map((merchant) => {
+                  return (
+                    <p key={merchant.name}>
+                      <b>{merchant.name}</b> - total spent in the last year:{' '}
+                      <b>{Math.abs(merchant.value).toFixed(0)} sek</b>
+                      <img
+                        className={classes.merchantLogo}
+                        src={`https://logo.clearbit.com/${merchant.name
+                          .split(/\s/)
+                          .join('')}.com`}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+                        }}
+                      ></img>
+                    </p>
+                  );
+                })
+              : ''}
+          </Typography>
+        </main>
+      </div>
+    </>
   );
 };
 

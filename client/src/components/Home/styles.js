@@ -30,5 +30,6 @@ export default makeStyles((theme) => ({
   button: {
     width: 'auto',
     margin: '3rem auto',
+    background: '#DA8364',
   },
 }));

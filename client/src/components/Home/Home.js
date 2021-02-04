@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Container,
-  Typography,
-  Button,
-  Grid,
-  Card,
-  CardActionArea,
-} from '@material-ui/core';
+import { Typography, Button, Card, CardActionArea } from '@material-ui/core';
 // import { MenuIcon } from '@material-ui/icons';
 import useStyles from './styles';
 import Emoji from '../emoji';
@@ -29,18 +22,16 @@ const Home = () => {
         alignItems="center"
         className={classes.container}
       >
-        <Typography variant="h6" className={classes.title}>
-          Hi <Emoji symbol="👋" label="wave" /> and welcome to this project
-          where you can connect to your bank and check out some of the
-          information.
+        <Typography variant="h4" gutterBottom className={classes.title}>
+          Hi <Emoji symbol="👋" label="wave" /> Please connect to your bank to
+          check your financial information.
         </Typography>
-        <Typography variant="h6" className={classes.description}>
-          Connect Your Bank by clicking on the button bellow!{' '}
+        <Typography variant="h5" className={classes.description}>
+          Connect by clicking on the button bellow!{' '}
           <Emoji symbol="👇" label="point" />
         </Typography>
         <Button
           className={classes.button}
-          color="primary"
           variant="contained"
           size="medium"
           type="submit"

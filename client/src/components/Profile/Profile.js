@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import useStyles from './styles';
+
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,6 +21,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+
+import CountUp from 'react-countup';
 
 import logo from '../../assets/tinklogo.png';
 
@@ -300,7 +303,16 @@ const Profile = () => {
           <Typography paragraph>
             {expenses && (
               <p>
-                Your total expenses are: <b>{expenses} sek</b>
+                Your total expenses are:{' '}
+                <b>
+                  <CountUp
+                    start={0}
+                    end={expenses}
+                    duration={2.5}
+                    separator=","
+                  />{' '}
+                  sek
+                </b>
               </p>
             )}
           </Typography>

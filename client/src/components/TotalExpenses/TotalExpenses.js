@@ -6,7 +6,6 @@ import useStyles from '../Profile/styles';
 
 const TotalExpenses = ({ expenses }) => {
   const classes = useStyles();
-  const [show, setShow] = useState(false);
 
   return (
     <Card className={classes.cards}>

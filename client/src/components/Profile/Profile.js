@@ -51,6 +51,14 @@ const Profile = () => {
   const [merchantByCategory, setMerchantByCategory] = useState([]);
   const [token, setToken] = useState('');
 
+  const [showExpenses, setShowExpenses] = useState(false);
+  const [showRecurrentMerchant, setShowRecurrentMerchant] = useState(false);
+  const [showMerchant, setShowMerchant] = useState(false);
+  const [
+    showHighestSpendingMerchants,
+    setShowHighestSpendingMerchants,
+  ] = useState(false);
+
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -195,7 +203,11 @@ const Profile = () => {
   };
 
   const handleChange = (e) => {
+    setShowHighestSpendingMerchants(false);
+    setShowExpenses(false);
+    setShowRecurrentMerchant(false);
     getMerchantByCategory(token, e.target.value);
+    setShowMerchant(true);
   };
 
   return (
@@ -233,7 +245,15 @@ const Profile = () => {
           <List>
             <ListItem button>
               <MonetizationOnIcon />
-              <ListItemIcon onClick={() => getTotalExpenses(token)}>
+              <ListItemIcon
+                onClick={() => {
+                  setShowMerchant(false);
+                  setShowHighestSpendingMerchants(false);
+                  setShowRecurrentMerchant(false);
+                  getTotalExpenses(token);
+                  setShowExpenses(true);
+                }}
+              >
                 <div className={classes.menuTitles}>See Expenses</div>
               </ListItemIcon>
               <ListItemText />
@@ -245,7 +265,15 @@ const Profile = () => {
           <List>
             <ListItem button>
               <BusinessIcon />
-              <ListItemIcon onClick={() => getReccurentMerchant(token)}>
+              <ListItemIcon
+                onClick={() => {
+                  setShowExpenses(false);
+                  setShowHighestSpendingMerchants(false);
+                  setShowMerchant(false);
+                  getReccurentMerchant(token);
+                  setShowRecurrentMerchant(true);
+                }}
+              >
                 <div className={classes.menuTitles}>
                   Most Recurrent Merchant
                 </div>
@@ -259,7 +287,15 @@ const Profile = () => {
           <List>
             <ListItem button>
               <Looks5Icon />
-              <ListItemIcon onClick={() => getHighestSpendingMerchants(token)}>
+              <ListItemIcon
+                onClick={() => {
+                  setShowExpenses(false);
+                  setShowMerchant(false);
+                  setShowRecurrentMerchant(false);
+                  getHighestSpendingMerchants(token);
+                  setShowHighestSpendingMerchants(true);
+                }}
+              >
                 <div className={classes.menuTitles}>Top 5 spendings</div>
               </ListItemIcon>
               <ListItemText />
@@ -294,13 +330,19 @@ const Profile = () => {
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
-          {merchantByCategory.map((list) => {
-            return <MerchantsPerCategory name={list.name} value={list.value} />;
-          })}
+          {showMerchant && (
+            <div>
+              {merchantByCategory.map((list) => {
+                return (
+                  <MerchantsPerCategory name={list.name} value={list.value} />
+                );
+              })}
+            </div>
+          )}
 
-          {expenses && <TotalExpenses expenses={expenses} />}
+          {showExpenses && <TotalExpenses expenses={expenses} />}
 
-          {merchant && (
+          {showRecurrentMerchant && (
             <RecurrentMerchant
               merchant={merchant}
               totalAmount={totalAmount}
@@ -308,10 +350,8 @@ const Profile = () => {
             />
           )}
 
-          {topMerchants.length > 0 ? (
+          {showHighestSpendingMerchants && (
             <TopMerchants topMerchants={topMerchants} />
-          ) : (
-            ''
           )}
         </main>
       </div>

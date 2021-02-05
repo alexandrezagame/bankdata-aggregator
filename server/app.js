@@ -85,9 +85,9 @@ async function getAccessToken(code) {
     client_secret: SECRET_ID, // Your OAuth client secret. Always handle the secret with care.
     grant_type: 'authorization_code',
   };
-  console.log('CODE', code);
-  console.log('CLIENT ID', body.client_id);
-  console.log('CLIENT SECRET', body.client_secret);
+  // console.log('CODE', code);
+  // console.log('CLIENT ID', body.client_id);
+  // console.log('CLIENT SECRET', body.client_secret);
 
   const response = await fetch(baseURL + '/oauth/token', {
     method: 'POST',

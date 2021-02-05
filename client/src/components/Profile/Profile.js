@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import useStyles from './styles';
+import { mode } from '../../utils/mode';
+import {
+  filterDataType,
+  filterDataCategoryType,
+} from '../../utils/filterExpenses';
+// import useFetch from '../../hooks/useFetch';
+import { fetchData } from '../../api/api';
+import TotalExpenses from '../TotalExpenses/TotalExpenses';
+import RecurrentMerchant from '../RecurrentMerchant/RecurrentMerchant';
+import TopMerchants from '../TopMerchants/TopMerchants';
 
 import {
   Drawer,
@@ -27,7 +37,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import Looks5Icon from '@material-ui/icons/Looks5';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-import CountUp from 'react-countup';
+
 import logo from '../../assets/tinklogo.png';
 
 const Profile = () => {
@@ -45,10 +55,17 @@ const Profile = () => {
   const [token, setToken] = useState(
     window.localStorage.getItem('token') || ''
   );
+  const [open, setOpen] = React.useState(false);
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (!token) {
-      // console.log('step 1');
       const parsed = queryString.parse(window.location.search);
       console.log(parsed);
       const fetchCode = async () => {
@@ -67,36 +84,33 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchDate = async () => {
-      const response = await fetch(
-        `http://localhost:8080/api/auth/user/${token}`
-      );
-      const data = await response.json();
+      const data = await fetchData('user', token);
 
-      const s = new Date(
+      const startDate = new Date(
         data.response[data.response.length - 1].originalDate
       ).toLocaleDateString('en-GB');
 
-      const x = new Date(data.response[0].originalDate).toLocaleDateString(
-        'en-GB'
-      );
+      const endDate = new Date(
+        data.response[0].originalDate
+      ).toLocaleDateString('en-GB');
 
-      setTimestampInfo({ ...timestampInfo, startDate: s, endDate: x });
+      setTimestampInfo({
+        ...timestampInfo,
+        startDate: startDate,
+        endDate: endDate,
+      });
     };
     fetchDate();
   }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await fetch(
-        `http://localhost:8080/api/auth/categories/${token}`
-      );
-      const data = await response.json();
-      const expenseCategories = data.response.filter((category) => {
-        return category.type === 'EXPENSES';
-      });
+      const data = await fetchData('categories', token);
 
-      let listCat = expenseCategories.map((o) => o.primaryName);
-      let filtered = expenseCategories.filter(
+      const filteredExpenses = filterDataType(data.response, 'EXPENSES');
+
+      let listCat = filteredExpenses.map((o) => o.primaryName);
+      let filtered = filteredExpenses.filter(
         ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
       );
 
@@ -106,15 +120,11 @@ const Profile = () => {
   }, []);
 
   const getMerchantByCategory = async (token, categoryId) => {
-    const response = await fetch(
-      `http://localhost:8080/api/auth/user/${token}`
-    );
-    const data = await response.json();
-    const expenses = data.response.filter((item) => {
-      return item.categoryType === 'EXPENSES';
-    });
+    const data = await fetchData('user', token);
 
-    const merchantCategory = expenses.filter((item) => {
+    const filteredExpenses = filterDataCategoryType(data.response, 'EXPENSES');
+
+    const merchantCategory = filteredExpenses.filter((item) => {
       return item.categoryId === categoryId;
     });
     setMerchantByCategory(merchantCategory);
@@ -122,45 +132,23 @@ const Profile = () => {
   };
 
   const getTotalExpenses = async (token) => {
-    const response = await fetch(
-      `http://localhost:8080/api/auth/user/${token}`
-    );
-    const data = await response.json();
-    const expenses = data.response.filter((item) => {
-      return item.categoryType === 'EXPENSES';
-    });
-    const incomes = data.response.filter((item) => {
-      return item.categoryType === 'INCOME';
-    });
-    console.log('data', data);
+    const data = await fetchData('user', token);
 
-    const totalExp = expenses.reduce((a, b) => {
+    const filteredExpenses = filterDataCategoryType(data.response, 'EXPENSES');
+
+    const totalExp = filteredExpenses.reduce((a, b) => {
       return a + b.amount;
     }, 0);
     const convertedTotalExp = Math.abs(totalExp).toFixed(0);
     setExpenses(convertedTotalExp);
   };
 
-  function mode(arr) {
-    return arr
-      .sort(
-        (a, b) =>
-          arr.filter((v) => v === a).length - arr.filter((v) => v === b).length
-      )
-      .pop();
-  }
-
   const getReccurentMerchant = async (token) => {
-    const response = await fetch(
-      `http://localhost:8080/api/auth/user/${token}`
-    );
-    const data = await response.json();
-    const expenses = data.response.filter((item) => {
-      return item.categoryType === 'EXPENSES';
-    });
+    const data = await fetchData('user', token);
+    const filteredExpenses = filterDataCategoryType(data.response, 'EXPENSES');
 
     const merchantArray = [];
-    expenses.map((merchant) => {
+    filteredExpenses.map((merchant) => {
       merchantArray.push(merchant.description);
     });
     const favMerchant = mode(merchantArray);
@@ -171,7 +159,7 @@ const Profile = () => {
     ).length;
     setTotalRecurrences(totalRecurrencesAtFavMerchant);
 
-    const favMerchantArray = expenses.filter((item) => {
+    const favMerchantArray = filteredExpenses.filter((item) => {
       return item.description === favMerchant;
     });
     const amountSpentOnMerchant = favMerchantArray.reduce((a, b) => {
@@ -182,18 +170,13 @@ const Profile = () => {
   };
 
   const getHighestSpendingMerchants = async (token) => {
-    const response = await fetch(
-      `http://localhost:8080/api/auth/user/${token}`
-    );
-    const data = await response.json();
+    const data = await fetchData('user', token);
 
-    const expenses = data.response.filter((item) => {
-      return item.categoryType === 'EXPENSES';
-    });
+    const filteredExpenses = filterDataCategoryType(data.response, 'EXPENSES');
 
     const merchant = {};
 
-    expenses.forEach(function (d) {
+    filteredExpenses.forEach(function (d) {
       if (merchant.hasOwnProperty(d.description)) {
         merchant[d.description] = merchant[d.description] + d.amount;
       } else {
@@ -310,67 +293,21 @@ const Profile = () => {
             })}
           </Typography>
 
-          {expenses && (
-            <Card className={classes.cards}>
-              <CardContent className={classes.cardsContent}>
-                <Typography className={classes.title}>
-                  Your total expenses are:{' '}
-                  <b className={classes.information}>
-                    <CountUp
-                      start={0}
-                      end={expenses}
-                      duration={2.5}
-                      separator=","
-                    />{' '}
-                    sek
-                  </b>
-                </Typography>
-              </CardContent>
-            </Card>
-          )}
+          {expenses && <TotalExpenses expenses={expenses} />}
 
           {merchant && (
-            <Card className={classes.cards}>
-              <CardContent className={classes.cardsContent}>
-                <Typography className={classes.title}>
-                  Most Recurrent Merchant:{' '}
-                  <b className={classes.information}>{merchant}</b>
-                </Typography>
-                <Typography variant="h5" component="h5">
-                  Total spent in the last year:{' '}
-                  <b className={classes.information}>{totalAmount} sek</b>
-                  <br></br>
-                  Amount of transactions:{' '}
-                  <b className={classes.information}>{totalRecurrences}</b>
-                </Typography>
-              </CardContent>
-            </Card>
+            <RecurrentMerchant
+              merchant={merchant}
+              totalAmount={totalAmount}
+              totalRecurrences={totalRecurrences}
+            />
           )}
 
-          <Typography paragraph>
-            {topMerchants.length > 0
-              ? topMerchants.slice(0, 5).map((merchant) => {
-                  return (
-                    <p key={merchant.name}>
-                      <b className={classes.information}>{merchant.name}</b> -
-                      total spent in the last year:{' '}
-                      <b>{Math.abs(merchant.value).toFixed(0)} sek</b>
-                      <img
-                        className={classes.merchantLogo}
-                        src={`https://logo.clearbit.com/${merchant.name
-                          .split(/\s/)
-                          .join('')}.com`}
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src =
-                            'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-                        }}
-                      ></img>
-                    </p>
-                  );
-                })
-              : ''}
-          </Typography>
+          {topMerchants.length > 0 ? (
+            <TopMerchants topMerchants={topMerchants} />
+          ) : (
+            ''
+          )}
         </main>
       </div>
     </>

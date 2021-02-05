@@ -21,6 +21,10 @@ export default makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     backgroundColor: '#427882',
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+    },
   },
   information: {
     color: '#F89672',
@@ -28,6 +32,10 @@ export default makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
   },
   drawerPaper: {
     width: drawerWidth,

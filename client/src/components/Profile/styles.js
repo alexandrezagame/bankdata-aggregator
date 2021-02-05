@@ -59,9 +59,10 @@ export default makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   merchantLogo: {
-    width: '50px',
-    height: '50px',
+    width: '70px',
+    height: '70px',
     borderRadius: '50%',
+    objectFit: 'contain',
   },
   title: {
     fontSize: 24,

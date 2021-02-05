@@ -16,8 +16,6 @@ import MerchantsPerCategory from '../MerchantsPerCategory/MerchantsPerCategory';
 import {
   Drawer,
   CssBaseline,
-  CardContent,
-  Card,
   Select,
   AppBar,
   FormControl,
@@ -37,8 +35,6 @@ import BusinessIcon from '@material-ui/icons/Business';
 import CategoryIcon from '@material-ui/icons/Category';
 import Looks5Icon from '@material-ui/icons/Looks5';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-
 import logo from '../../assets/tinklogo.png';
 
 const Profile = () => {
@@ -53,9 +49,7 @@ const Profile = () => {
   const [topMerchants, setTopMerchants] = useState([]);
   const [categories, setCategories] = useState([]);
   const [merchantByCategory, setMerchantByCategory] = useState([]);
-  const [token, setToken] = useState(
-    window.localStorage.getItem('token') || ''
-  );
+  const [token, setToken] = useState('');
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -66,21 +60,31 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (!token) {
-      const parsed = queryString.parse(window.location.search);
-      console.log(parsed);
-      const fetchCode = async () => {
-        const response = await fetch(
-          `http://localhost:8080/api/auth/${parsed.code}`
-        );
-        const data = await response.json();
-        setToken(data.access_token);
-        localStorage.setItem('token', data.access_token);
-      };
-      fetchCode();
-    } else {
-      console.log('step 2');
-    }
+    let cat;
+    let y;
+    const parsed = queryString.parse(window.location.search);
+    const fetchCode = async () => {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/${parsed.code}`
+      );
+      const data = await response.json();
+
+      setToken(data.access_token);
+      return data.access_token;
+    };
+    const fetchInitialData = async () => {
+      const accessToken = await fetchCode();
+      const data = await fetchData('categories', accessToken);
+
+      const filteredExpenses = filterDataType(data.response, 'EXPENSES');
+      let listCat = filteredExpenses.map((o) => o.primaryName);
+      let filtered = filteredExpenses.filter(
+        ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
+      );
+
+      setCategories(filtered);
+    };
+    fetchInitialData();
   }, []);
 
   useEffect(() => {
@@ -102,22 +106,6 @@ const Profile = () => {
       });
     };
     fetchDate();
-  }, []);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const data = await fetchData('categories', token);
-
-      const filteredExpenses = filterDataType(data.response, 'EXPENSES');
-
-      let listCat = filteredExpenses.map((o) => o.primaryName);
-      let filtered = filteredExpenses.filter(
-        ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
-      );
-
-      setCategories(filtered);
-    };
-    fetchCategories();
   }, []);
 
   const getMerchantByCategory = async (token, categoryId) => {
@@ -312,7 +300,6 @@ const Profile = () => {
           <div className={classes.toolbar} />
 
           {merchantByCategory.map((list) => {
-            console.log('list', list);
             return <MerchantsPerCategory name={list.name} value={list.value} />;
           })}
 

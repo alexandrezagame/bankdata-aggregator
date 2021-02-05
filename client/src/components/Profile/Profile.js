@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import useStyles from './styles';
 import { mode } from '../../utils/mode';
+import { useHistory } from 'react-router-dom';
 import {
   filterDataType,
   filterDataCategoryType,
@@ -39,7 +40,7 @@ import logo from '../../assets/tinklogo.png';
 
 const Profile = () => {
   const classes = useStyles();
-
+  const history = useHistory();
   const [expenses, setExpenses] = useState('');
   const [timestampInfo, setTimestampInfo] = useState({});
 
@@ -69,46 +70,55 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    const parsed = queryString.parse(window.location.search);
-    const fetchCode = async () => {
-      const response = await fetch(
-        `http://localhost:8080/api/auth/${parsed.code}`
-      );
-      const data = await response.json();
+    try {
+      const parsed = queryString.parse(window.location.search);
+      const fetchCode = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/api/auth/${parsed.code}`
+          );
+          if (!response.ok) throw await response.json();
+          const data = await response.json();
 
-      setToken(data.access_token);
-      return data.access_token;
-    };
-    const fetchInitialData = async () => {
-      const accessToken = await fetchCode();
-      const categoryData = await fetchData('categories', accessToken);
+          setToken(data.access_token);
+          return data.access_token;
+        } catch (error) {
+          history.push('/');
+        }
+      };
+      const fetchInitialData = async () => {
+        const accessToken = await fetchCode();
+        const categoryData = await fetchData('categories', accessToken);
 
-      const filteredExpenses = filterDataType(
-        categoryData.response,
-        'EXPENSES'
-      );
-      let listCat = filteredExpenses.map((o) => o.primaryName);
-      let filtered = filteredExpenses.filter(
-        ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
-      );
-      const dateData = await fetchData('user', accessToken);
-      const startDate = new Date(
-        dateData.response[dateData.response.length - 1].originalDate
-      ).toLocaleDateString('en-GB');
+        const filteredExpenses = filterDataType(
+          categoryData.response,
+          'EXPENSES'
+        );
+        let listCat = filteredExpenses.map((o) => o.primaryName);
+        let filtered = filteredExpenses.filter(
+          ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
+        );
+        const dateData = await fetchData('user', accessToken);
+        const startDate = new Date(
+          dateData.response[dateData.response.length - 1].originalDate
+        ).toLocaleDateString('en-GB');
 
-      const endDate = new Date(
-        dateData.response[0].originalDate
-      ).toLocaleDateString('en-GB');
+        const endDate = new Date(
+          dateData.response[0].originalDate
+        ).toLocaleDateString('en-GB');
 
-      setTimestampInfo({
-        ...timestampInfo,
-        startDate: startDate,
-        endDate: endDate,
-      });
+        setTimestampInfo({
+          ...timestampInfo,
+          startDate: startDate,
+          endDate: endDate,
+        });
 
-      setCategories(filtered);
-    };
-    fetchInitialData();
+        setCategories(filtered);
+      };
+      fetchInitialData();
+    } catch (error) {
+      console.log('Error from parsed', error);
+    }
   }, []);
 
   const getMerchantByCategory = async (token, categoryId) => {
@@ -314,7 +324,7 @@ const Profile = () => {
                 {categories.length > 1 ? (
                   <Select onChange={handleChange}>
                     {categories.map((category) => (
-                      <MenuItem value={category.id}>
+                      <MenuItem key={category.id} value={category.id}>
                         {category.primaryName}
                       </MenuItem>
                     ))}
@@ -334,7 +344,11 @@ const Profile = () => {
             <div>
               {merchantByCategory.map((list) => {
                 return (
-                  <MerchantsPerCategory name={list.name} value={list.value} />
+                  <MerchantsPerCategory
+                    name={list.name}
+                    value={list.value}
+                    key={list.value}
+                  />
                 );
               })}
             </div>

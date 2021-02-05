@@ -13,7 +13,7 @@ const TotalExpenses = ({ expenses }) => {
         <Typography className={classes.title}>
           Your total expenses are:{' '}
           <b className={classes.information}>
-            <CountUp start={0} end={expenses} duration={2.5} separator="," />{' '}
+            <CountUp start={0} end={+expenses} duration={2.5} separator="," />{' '}
             sek
           </b>
         </Typography>

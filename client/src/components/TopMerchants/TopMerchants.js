@@ -7,22 +7,23 @@ const TopMerchants = ({ topMerchants }) => {
 
   return topMerchants.slice(0, 5).map((merchant) => {
     return (
-      <Typography paragraph>
+      <Typography paragraph key={merchant.value}>
         <p key={merchant.name}>
           <b className={classes.information}>{merchant.name}</b> - total spent
           in the last year: <b>{Math.abs(merchant.value).toFixed(0)} sek</b>
-          <img
-            className={classes.merchantLogo}
-            src={`https://logo.clearbit.com/${merchant.name
-              .split(/\s/)
-              .join('')}.com`}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-            }}
-          ></img>
         </p>
+
+        <img
+          className={classes.merchantLogo}
+          src={`https://logo.clearbit.com/${merchant.name
+            .split(/\s/)
+            .join('')}.com`}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src =
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+          }}
+        ></img>
       </Typography>
     );
   });

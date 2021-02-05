@@ -20,40 +20,48 @@ app.get('/api/auth', (req, res) => {
 app.get('/api/auth/:code', async (req, res) => {
   try {
     const code = req.params.code;
-    console.log('Server side HERE', code);
     const data = await getAccessToken(code);
     res.send({ access_token: data.access_token });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ message: error });
+    return;
   }
 });
 
 const getUserData = async (token) => {
-  const response = await fetch('https://api.tink.com/api/v1/transactions', {
-    headers: {
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + token,
-      // 'Content-Type': 'application/json',
-    },
-  });
-  // console.log('RESPONSE IN GETUSER', response);
+  try {
+    const response = await fetch('https://api.tink.com/api/v1/transactions', {
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer ' + token,
+        // 'Content-Type': 'application/json',
+      },
+    });
 
-  const data = await response.json();
-  return data;
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    res.status(500).json({ message: error });
+    return;
+  }
 };
 
 const getUserCategories = async (token) => {
-  const response = await fetch('https://api.tink.com/api/v1/categories', {
-    headers: {
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + token,
-      // 'Content-Type': 'application/json',
-    },
-  });
-  // console.log('RESPONSE IN GETUSER', response);
+  try {
+    const response = await fetch('https://api.tink.com/api/v1/categories', {
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer ' + token,
+        // 'Content-Type': 'application/json',
+      },
+    });
 
-  const data = await response.json();
-  return data;
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    res.status(500).json({ message: error });
+    return;
+  }
 };
 
 app.get('/api/auth/user/:code', async (req, res) => {
@@ -81,13 +89,10 @@ async function handleResponse(response) {
 async function getAccessToken(code) {
   const body = {
     code: code,
-    client_id: CLIENT_ID, // Your OAuth client identifier.
-    client_secret: SECRET_ID, // Your OAuth client secret. Always handle the secret with care.
+    client_id: CLIENT_ID, //  OAuth client identifier.
+    client_secret: SECRET_ID, //  OAuth client secret.
     grant_type: 'authorization_code',
   };
-  // console.log('CODE', code);
-  // console.log('CLIENT ID', body.client_id);
-  // console.log('CLIENT SECRET', body.client_secret);
 
   const response = await fetch(baseURL + '/oauth/token', {
     method: 'POST',
@@ -100,7 +105,6 @@ async function getAccessToken(code) {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
   });
-  // console.log('RESPONSE', response);
   return handleResponse(response);
 }
 

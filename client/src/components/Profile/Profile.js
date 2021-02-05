@@ -11,6 +11,7 @@ import { fetchData } from '../../api/api';
 import TotalExpenses from '../TotalExpenses/TotalExpenses';
 import RecurrentMerchant from '../RecurrentMerchant/RecurrentMerchant';
 import TopMerchants from '../TopMerchants/TopMerchants';
+import MerchantsPerCategory from '../MerchantsPerCategory/MerchantsPerCategory';
 
 import {
   Drawer,
@@ -127,8 +128,21 @@ const Profile = () => {
     const merchantCategory = filteredExpenses.filter((item) => {
       return item.categoryId === categoryId;
     });
-    setMerchantByCategory(merchantCategory);
-    console.log('amount of the expense', data.response);
+    const merchant = {};
+    merchantCategory.forEach(function (d) {
+      if (merchant.hasOwnProperty(d.description)) {
+        merchant[d.description] = merchant[d.description] + d.amount;
+      } else {
+        merchant[d.description] = d.amount;
+      }
+    });
+
+    const combinedAmountOfMerchant = [];
+
+    for (const prop in merchant) {
+      combinedAmountOfMerchant.push({ name: prop, value: merchant[prop] });
+    }
+    setMerchantByCategory(combinedAmountOfMerchant);
   };
 
   const getTotalExpenses = async (token) => {
@@ -205,6 +219,7 @@ const Profile = () => {
     <>
       <div className={classes.root}>
         <CssBaseline />
+
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" noWrap>
@@ -217,6 +232,7 @@ const Profile = () => {
             </Typography>
           </Toolbar>
         </AppBar>
+
         <Drawer
           className={classes.drawer}
           variant="permanent"
@@ -228,7 +244,9 @@ const Profile = () => {
           <div className={classes.toolbar}>
             <img src={logo} className={classes.logo} />
           </div>
+
           <Divider />
+
           <List>
             <ListItem button>
               <MonetizationOnIcon />
@@ -238,7 +256,9 @@ const Profile = () => {
               <ListItemText />
             </ListItem>
           </List>
+
           <Divider />
+
           <List>
             <ListItem button>
               <BusinessIcon />
@@ -250,7 +270,9 @@ const Profile = () => {
               <ListItemText />
             </ListItem>
           </List>
+
           <Divider />
+
           <List>
             <ListItem button>
               <Looks5Icon />
@@ -260,6 +282,7 @@ const Profile = () => {
               <ListItemText />
             </ListItem>
           </List>
+
           <Divider />
 
           <List>
@@ -284,14 +307,14 @@ const Profile = () => {
             </ListItem>
           </List>
         </Drawer>
+
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
-          <Typography paragraph>
-            {merchantByCategory.map((list) => {
-              return <p>{list.description}</p>;
-            })}
-          </Typography>
+          {merchantByCategory.map((list) => {
+            console.log('list', list);
+            return <MerchantsPerCategory name={list.name} value={list.value} />;
+          })}
 
           {expenses && <TotalExpenses expenses={expenses} />}
 

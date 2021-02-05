@@ -4,13 +4,9 @@ import useStyles from '../Profile/styles';
 
 const MerchantsPerCategory = ({ name, value }) => {
   const classes = useStyles();
-  // console.log('name', name);
 
-  const cleanedRegex = name.replace(/[^a-zA-Z ]/g, ' ');
-
+  const cleanedRegex = name.replace(/[^a-zA-Z& ]/g, ' ');
   let firstWord = cleanedRegex.replace(/ .*/, '');
-
-  console.log(firstWord);
 
   return (
     <>

@@ -50,6 +50,7 @@ const Profile = () => {
   const [categories, setCategories] = useState([]);
   const [merchantByCategory, setMerchantByCategory] = useState([]);
   const [token, setToken] = useState('');
+
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -60,8 +61,6 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    let cat;
-    let y;
     const parsed = queryString.parse(window.location.search);
     const fetchCode = async () => {
       const response = await fetch(
@@ -74,29 +73,23 @@ const Profile = () => {
     };
     const fetchInitialData = async () => {
       const accessToken = await fetchCode();
-      const data = await fetchData('categories', accessToken);
+      const categoryData = await fetchData('categories', accessToken);
 
-      const filteredExpenses = filterDataType(data.response, 'EXPENSES');
+      const filteredExpenses = filterDataType(
+        categoryData.response,
+        'EXPENSES'
+      );
       let listCat = filteredExpenses.map((o) => o.primaryName);
       let filtered = filteredExpenses.filter(
         ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
       );
-
-      setCategories(filtered);
-    };
-    fetchInitialData();
-  }, []);
-
-  useEffect(() => {
-    const fetchDate = async () => {
-      const data = await fetchData('user', token);
-
+      const dateData = await fetchData('user', accessToken);
       const startDate = new Date(
-        data.response[data.response.length - 1].originalDate
+        dateData.response[dateData.response.length - 1].originalDate
       ).toLocaleDateString('en-GB');
 
       const endDate = new Date(
-        data.response[0].originalDate
+        dateData.response[0].originalDate
       ).toLocaleDateString('en-GB');
 
       setTimestampInfo({
@@ -104,8 +97,10 @@ const Profile = () => {
         startDate: startDate,
         endDate: endDate,
       });
+
+      setCategories(filtered);
     };
-    fetchDate();
+    fetchInitialData();
   }, []);
 
   const getMerchantByCategory = async (token, categoryId) => {

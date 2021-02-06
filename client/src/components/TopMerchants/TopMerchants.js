@@ -17,9 +17,9 @@ const TopMerchants = ({ topMerchants }) => {
             <p className={classes.merchantTitle}>
               <b>{merchant.name}</b>
             </p>
-            <p>
-              Total spent in the last year:{' '}
-              <b>{Math.abs(merchant.value).toFixed(0)} sek</b>
+            <p className={classes.merchantDescription}>
+              Total spent:
+              <b> {Math.abs(merchant.value).toFixed(0)} sek</b>
             </p>
           </Typography>
           <Avatar

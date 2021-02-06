@@ -341,38 +341,56 @@ const Profile = () => {
           <div className={classes.toolbar} />
 
           {showMerchant && (
-            <div>
-              {merchantByCategory.map((list) => {
-                return (
-                  <MerchantsPerCategory
-                    name={list.name}
-                    value={list.value}
-                    key={list.value}
-                  />
-                );
-              })}
-            </div>
+            <>
+              <div className={classes.sectionTitle}>
+                <h3>Your favorite merchants in this category:</h3>
+              </div>
+              <div>
+                {merchantByCategory.map((list) => {
+                  return (
+                    <MerchantsPerCategory
+                      name={list.name}
+                      value={list.value}
+                      key={list.value}
+                    />
+                  );
+                })}
+              </div>
+            </>
           )}
 
-          {showExpenses && <TotalExpenses expenses={expenses} />}
+          {showExpenses && (
+            <>
+              <div className={classes.sectionTitle}>
+                <h3>Your total expenses in the collected period:</h3>
+              </div>
+              <TotalExpenses expenses={expenses} />
+            </>
+          )}
 
           {showRecurrentMerchant && (
-            <RecurrentMerchant
-              merchant={merchant}
-              totalAmount={totalAmount}
-              totalRecurrences={totalRecurrences}
-              topMerchants={topMerchants}
-            />
+            <>
+              <div className={classes.sectionTitle}>
+                <h3>Your most recurrrent merchant:</h3>
+              </div>
+              <RecurrentMerchant
+                merchant={merchant}
+                totalAmount={totalAmount}
+                totalRecurrences={totalRecurrences}
+                topMerchants={topMerchants}
+              />
+            </>
           )}
 
           {showHighestSpendingMerchants && (
-            <div className={classes.sectionTitle}>
-              <div className={classes.showHighestSpendingMerchants}>
+            <>
+              <div className={classes.sectionTitle}>
                 <h3>Your top spendings:</h3>
               </div>
-
-              <TopMerchants topMerchants={topMerchants} />
-            </div>
+              <div className={classes.showHighestSpendingMerchants}>
+                <TopMerchants topMerchants={topMerchants} />
+              </div>
+            </>
           )}
         </main>
       </div>

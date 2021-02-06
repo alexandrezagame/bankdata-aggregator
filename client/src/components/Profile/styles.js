@@ -67,6 +67,8 @@ export default makeStyles((theme) => ({
   sectionTitle: {
     color: '#F89672',
     marginBottom: '16px',
+    textAlign: 'center',
+    fontSize: '24px',
   },
   showHighestSpendingMerchants: {
     display: 'flex',

@@ -4,14 +4,7 @@ export default makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  cards: {
-    marginBottom: '2rem',
-    backgroundColor: '#427982',
-    color: 'white',
-    width: '50vw',
-    padding: '1rem',
-    margin: '0 auto',
-  },
+
   bannerText: {
     margin: '0 auto',
   },
@@ -26,9 +19,7 @@ export default makeStyles((theme) => ({
       marginLeft: drawerWidth,
     },
   },
-  information: {
-    color: '#F89672',
-  },
+
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -58,22 +49,25 @@ export default makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  title: {
-    fontSize: 24,
-  },
   menuTitles: {
     marginLeft: '20px',
   },
   sectionTitle: {
     color: '#F89672',
-    marginBottom: '16px',
+    marginBottom: '1.5rem',
     textAlign: 'center',
     fontSize: '24px',
+  },
+  showMerchantsPerCategory: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
   },
   showHighestSpendingMerchants: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
   },
 }));

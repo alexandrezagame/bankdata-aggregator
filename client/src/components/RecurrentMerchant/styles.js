@@ -10,7 +10,7 @@ export default makeStyles((theme) => ({
     width: '40vw',
   },
   cardsContent: {
-    textAlign: 'center',
+    textAlign: 'justify',
     display: 'flex',
     flexDirection: 'column',
   },

@@ -346,15 +346,17 @@ const Profile = () => {
                 <h3>Your favorite merchants in this category:</h3>
               </div>
               <div>
-                {merchantByCategory.map((list) => {
-                  return (
-                    <MerchantsPerCategory
-                      name={list.name}
-                      value={list.value}
-                      key={list.value}
-                    />
-                  );
-                })}
+                <div className={classes.showMerchantsPerCategory}>
+                  {merchantByCategory.map((list) => {
+                    return (
+                      <MerchantsPerCategory
+                        name={list.name}
+                        value={list.value}
+                        key={list.value}
+                      />
+                    );
+                  })}
+                </div>
               </div>
             </>
           )}

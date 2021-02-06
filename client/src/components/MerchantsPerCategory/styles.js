@@ -5,7 +5,7 @@ export default makeStyles((theme) => ({
     width: '12.5rem',
     marginBottom: '1rem',
     backgroundColor: '#427982',
-    padding: '1rem',
+
     minHeight: '15.625rem',
     position: 'relative',
   },
@@ -21,7 +21,11 @@ export default makeStyles((theme) => ({
   merchantDescription: {
     fontSize: '1rem',
     position: 'absolute',
+    width: '100%',
     bottom: '0',
+    textAlign: 'center',
+    left: '50%',
+    transform: 'translateX(-50%)',
     marginBottom: '1rem',
   },
   large: {
@@ -31,6 +35,8 @@ export default makeStyles((theme) => ({
     border: '1px solid #F89672',
     position: 'absolute',
     bottom: '1.5rem',
+    marginTop: '2rem',
+
     marginBottom: '2rem',
     left: '50%',
     transform: 'translateX(-50%)',

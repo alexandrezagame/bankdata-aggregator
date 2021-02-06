@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import useStyles from './styles';
 import Emoji from '../emoji';
+import clsx from 'clsx';
 
 import { mode } from '../../utils/mode';
 import { useHistory } from 'react-router-dom';
@@ -9,7 +10,6 @@ import {
   filterDataType,
   filterDataCategoryType,
 } from '../../utils/filterExpenses';
-// import useFetch from '../../hooks/useFetch';
 import { fetchData } from '../../api/api';
 import TotalExpenses from '../TotalExpenses/TotalExpenses';
 import RecurrentMerchant from '../RecurrentMerchant/RecurrentMerchant';
@@ -31,8 +31,12 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  IconButton,
 } from '@material-ui/core';
 
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import BusinessIcon from '@material-ui/icons/Business';
 import CategoryIcon from '@material-ui/icons/Category';
@@ -43,9 +47,9 @@ import logo from '../../assets/tinklogo.png';
 const Profile = () => {
   const classes = useStyles();
   const history = useHistory();
+
   const [expenses, setExpenses] = useState('');
   const [timestampInfo, setTimestampInfo] = useState({});
-
   const [merchant, setMerchant] = useState('');
   const [totalRecurrences, setTotalRecurrences] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
@@ -53,7 +57,6 @@ const Profile = () => {
   const [categories, setCategories] = useState([]);
   const [merchantByCategory, setMerchantByCategory] = useState([]);
   const [token, setToken] = useState('');
-
   const [showExpenses, setShowExpenses] = useState(false);
   const [showRecurrentMerchant, setShowRecurrentMerchant] = useState(false);
   const [showMerchant, setShowMerchant] = useState(false);
@@ -63,6 +66,7 @@ const Profile = () => {
   ] = useState(false);
 
   const [open, setOpen] = React.useState(false);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -227,13 +231,26 @@ const Profile = () => {
       <div className={classes.root}>
         <CssBaseline />
 
-        <AppBar position="fixed" className={classes.appBar}>
+        <AppBar
+          position="fixed"
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+          })}
+        >
           <Toolbar>
-            <Typography variant="h6" noWrap>
+            <IconButton
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, open && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" wrap className={classes.banner}>
               {timestampInfo.startDate && (
                 <div className={classes.bannerText}>
-                  Displaying data collected since {timestampInfo.startDate}{' '}
-                  until {timestampInfo.endDate}
+                  Displaying data collected from {timestampInfo.startDate} until{' '}
+                  {timestampInfo.endDate}
                 </div>
               )}
             </Typography>
@@ -242,15 +259,27 @@ const Profile = () => {
 
         <Drawer
           className={classes.drawer}
-          variant="permanent"
+          variant="persistent"
+          anchor="left"
+          open={open}
           classes={{
             paper: classes.drawerPaper,
           }}
-          anchor="left"
         >
-          <div className={classes.toolbar}>
+          <div className={classes.drawerHeader}>
             <img src={logo} className={classes.logo} />
+            <IconButton
+              onClick={handleDrawerClose}
+              className={classes.closingButton}
+            >
+              {handleDrawerClose === 'ltr' ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
           </div>
+          <Divider />
 
           <Divider />
 
@@ -339,8 +368,12 @@ const Profile = () => {
           </List>
         </Drawer>
 
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: open,
+          })}
+        >
+          <div className={classes.drawerHeader} />
 
           {showMerchant && (
             <>
@@ -351,7 +384,7 @@ const Profile = () => {
                 </h3>
               </div>
               <div>
-                <div className={classes.showMerchantsPerCategory}>
+                <div className={classes.merchantsCards}>
                   {merchantByCategory.map((list) => {
                     return (
                       <MerchantsPerCategory
@@ -403,7 +436,7 @@ const Profile = () => {
                   <Emoji symbol="🔝" label="Top Arrow" />
                 </h3>
               </div>
-              <div className={classes.showHighestSpendingMerchants}>
+              <div className={classes.merchantsCards}>
                 <TopMerchants topMerchants={topMerchants} />
               </div>
             </>

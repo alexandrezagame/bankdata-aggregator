@@ -31,7 +31,7 @@ export default makeStyles((theme) => ({
     transform: 'translateX(-50%)',
     marginBottom: '1rem',
   },
-  large: {
+  images: {
     width: '9.375rem',
     height: '9.375rem',
     borderRadius: '50%',
@@ -41,11 +41,6 @@ export default makeStyles((theme) => ({
     marginBottom: '2rem',
     left: '50%',
     transform: 'translateX(-50%)',
-  },
-  MuiAvatar: {
-    img: {
-      // handle correctly non-square images
-      objectFit: 'contain !important',
-    },
+    objectFit: 'contain',
   },
 }));

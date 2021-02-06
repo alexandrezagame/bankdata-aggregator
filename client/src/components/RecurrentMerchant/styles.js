@@ -4,10 +4,14 @@ export default makeStyles((theme) => ({
   cards: {
     backgroundColor: '#427982',
     color: 'white',
-    width: 'auto',
+    width: '50vw',
     padding: '16px',
     margin: '0 auto',
-    width: '40vw',
+
+    [theme.breakpoints.down('sm')]: {
+      width: 'auto',
+    },
+
     boxShadow:
       '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
   },
@@ -15,8 +19,12 @@ export default makeStyles((theme) => ({
     textAlign: 'justify',
     display: 'flex',
     flexDirection: 'column',
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'center',
+    },
   },
   cardInformation: {
+    margin: '0 auto',
     fontSize: '1.5rem',
   },
   information: {

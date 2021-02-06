@@ -2,12 +2,15 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
   container: {
-    width: '12.5rem',
-    marginBottom: '1rem',
+    width: '14.375rem',
+
+    margin: '1rem',
     backgroundColor: '#427982',
     padding: '1rem',
-    minHeight: '15.625rem',
+    minHeight: '16.625rem',
     position: 'relative',
+    boxShadow:
+      '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
   },
   information: {
     color: 'white',
@@ -21,12 +24,16 @@ export default makeStyles((theme) => ({
   merchantDescription: {
     fontSize: '1rem',
     position: 'absolute',
+    width: '100%',
     bottom: '0',
+    textAlign: 'center',
+    left: '50%',
+    transform: 'translateX(-50%)',
     marginBottom: '1rem',
   },
   large: {
-    width: '6.25rem',
-    height: '6.25rem',
+    width: '9.375rem',
+    height: '9.375rem',
     borderRadius: '50%',
     border: '1px solid #F89672',
     position: 'absolute',
@@ -38,8 +45,7 @@ export default makeStyles((theme) => ({
   MuiAvatar: {
     img: {
       // handle correctly non-square images
-      objectFit: 'contain',
-      height: '100%',
+      objectFit: 'contain !important',
     },
   },
 }));

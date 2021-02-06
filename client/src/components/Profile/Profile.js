@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import useStyles from './styles';
+import Emoji from '../emoji';
+
 import { mode } from '../../utils/mode';
 import { useHistory } from 'react-router-dom';
 import {
@@ -343,7 +345,10 @@ const Profile = () => {
           {showMerchant && (
             <>
               <div className={classes.sectionTitle}>
-                <h3>Your favorite merchants in this category:</h3>
+                <h3>
+                  Your favorite merchants in this category:{' '}
+                  <Emoji symbol="❤️‍🔥" label="Heart on Fire" />
+                </h3>
               </div>
               <div>
                 <div className={classes.showMerchantsPerCategory}>
@@ -364,7 +369,10 @@ const Profile = () => {
           {showExpenses && (
             <>
               <div className={classes.sectionTitle}>
-                <h3>Your total expenses in the collected period:</h3>
+                <h3>
+                  Your total expenses in the collected period:{' '}
+                  <Emoji symbol="💸" label="Money with Wings" />
+                </h3>
               </div>
               <TotalExpenses expenses={expenses} />
             </>
@@ -373,7 +381,10 @@ const Profile = () => {
           {showRecurrentMerchant && (
             <>
               <div className={classes.sectionTitle}>
-                <h3>Your most recurrrent merchant:</h3>
+                <h3>
+                  Your most recurrent merchant:{' '}
+                  <Emoji symbol="🧡" label="Orange Heart" />
+                </h3>
               </div>
               <RecurrentMerchant
                 merchant={merchant}
@@ -387,7 +398,10 @@ const Profile = () => {
           {showHighestSpendingMerchants && (
             <>
               <div className={classes.sectionTitle}>
-                <h3>Your top spendings:</h3>
+                <h3>
+                  Top 5 merchants with highest spendings:{' '}
+                  <Emoji symbol="🔝" label="Top Arrow" />
+                </h3>
               </div>
               <div className={classes.showHighestSpendingMerchants}>
                 <TopMerchants topMerchants={topMerchants} />

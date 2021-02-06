@@ -19,6 +19,7 @@ const MerchantsPerCategory = ({ name, value }) => {
               <b> {Math.abs(value).toFixed(0)} sek</b>
             </p>
           </Typography>
+
           <Avatar
             className={classes.large}
             src={`https://logo.clearbit.com/${firstWord}.com`}

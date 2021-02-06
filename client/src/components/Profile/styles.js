@@ -6,7 +6,7 @@ export default makeStyles((theme) => ({
   },
   cards: {
     marginBottom: '2rem',
-    backgroundColor: '#03424B',
+    backgroundColor: '#427982',
     color: 'white',
     width: '50vw',
     padding: '1rem',
@@ -20,7 +20,7 @@ export default makeStyles((theme) => ({
     marginLeft: drawerWidth,
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#427882',
+    backgroundColor: '#427982',
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
@@ -58,16 +58,20 @@ export default makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  merchantLogo: {
-    width: '70px',
-    height: '70px',
-    borderRadius: '50%',
-    objectFit: 'contain',
-  },
   title: {
     fontSize: 24,
   },
   menuTitles: {
     marginLeft: '20px',
+  },
+  sectionTitle: {
+    color: '#F89672',
+    marginBottom: '16px',
+  },
+  showHighestSpendingMerchants: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
   },
 }));

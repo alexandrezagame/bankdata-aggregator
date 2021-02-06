@@ -361,11 +361,18 @@ const Profile = () => {
               merchant={merchant}
               totalAmount={totalAmount}
               totalRecurrences={totalRecurrences}
+              topMerchants={topMerchants}
             />
           )}
 
           {showHighestSpendingMerchants && (
-            <TopMerchants topMerchants={topMerchants} />
+            <div className={classes.sectionTitle}>
+              <div className={classes.showHighestSpendingMerchants}>
+                <h3>Your top spendings:</h3>
+              </div>
+
+              <TopMerchants topMerchants={topMerchants} />
+            </div>
           )}
         </main>
       </div>

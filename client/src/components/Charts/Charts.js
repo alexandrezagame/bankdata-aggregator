@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js';
+import useStyles from './styles';
+import Emoji from '../emoji';
 
 const colors = [
   'red',
@@ -17,7 +19,7 @@ const colors = [
 
 const Charts = ({ type, title, datasets }) => {
   const chartRef = useRef(null);
-  console.log('datasets', datasets);
+  const classes = useStyles();
 
   useEffect(() => {
     var myChart = new Chart(chartRef.current, {
@@ -55,7 +57,15 @@ const Charts = ({ type, title, datasets }) => {
     });
   }, []);
 
-  return <canvas id="myChart" width="400" height="400" ref={chartRef}></canvas>;
+  return (
+    <div className={classes.chart}>
+      <h3 className={classes.title}>
+        Your total expenses per category:
+        <Emoji symbol="📊" label="Bar chart" />
+      </h3>
+      <canvas id="myChart" width="200" height="200" ref={chartRef}></canvas>
+    </div>
+  );
 };
 
 export default Charts;

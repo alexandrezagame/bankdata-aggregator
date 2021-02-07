@@ -21,9 +21,13 @@ const MerchantsPerCategory = ({ name, value }) => {
           </Typography>
 
           <Avatar
-            style={{ objectFit: 'contain' }}
+            style={{
+              backgroundSize: 'contain',
+              backgroundPosition: 'top center',
+            }}
+            size={250}
             className={classes.images}
-            src={`https://logo.clearbit.com/${firstWord}.com`}
+            src={`https://logo.clearbit.com/${firstWord}.com?size=100`}
             onError={(e) => {
               e.target.onerror = null;
               e.target.src =

@@ -1,15 +1,35 @@
-import React from 'react';
-import { Typography, Button, Card, CardActionArea } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import {
+  Typography,
+  Button,
+  Card,
+  CardActionArea,
+  TextareaAutosize,
+} from '@material-ui/core';
 // import { MenuIcon } from '@material-ui/icons';
 import useStyles from './styles';
 import Emoji from '../emoji';
+import authService from '../../services/authService';
+import { useHistory } from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const history = useHistory();
+
   const classes = useStyles();
+
+  useEffect(async () => {
+    const token = await authService.getAccessTokenFromRefresh();
+    setLoading(false);
+    if (token) {
+      history.push('/profile');
+    }
+  }, []);
 
   const fetchData = async () => {
     const data = await (await fetch('http://localhost:8080/api/auth')).json();
-    console.log(data);
+
     window.location = data.url;
   };
 
@@ -35,9 +55,9 @@ const Home = () => {
           variant="contained"
           size="medium"
           type="submit"
-          onClick={() => fetchData()}
+          onClick={() => (loading ? null : fetchData())}
         >
-          Connect
+          {loading ? <CircularProgress /> : 'Connect'}
         </Button>
       </CardActionArea>
     </Card>

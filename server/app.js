@@ -21,9 +21,46 @@ app.get('/api/auth/:code', async (req, res) => {
   try {
     const code = req.params.code;
     const data = await getAccessToken(code);
-    res.send({ access_token: data.access_token });
+    res.send({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+    });
   } catch (error) {
     res.status(500).json({ message: error });
+    return;
+  }
+});
+
+app.get('/api/auth/refresh/:refreshtoken', async (req, res) => {
+  try {
+    const body = {
+      client_id: CLIENT_ID, //  OAuth client identifier.
+      client_secret: SECRET_ID, //  OAuth client secret.
+      grant_type: 'refresh_token',
+      refresh_token: req.params.refreshtoken,
+    };
+    const data = await handleResponse(
+      await fetch(`https://api.tink.com/api/v1/oauth/token`, {
+        method: 'POST',
+        body: Object.keys(body)
+          .map(
+            (key) =>
+              encodeURIComponent(key) + '=' + encodeURIComponent(body[key])
+          )
+          .join('&'),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        },
+      })
+    );
+    res.send({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+    });
+    return;
+  } catch (error) {
+    res.status(401).json({ message: error });
+    console.log(error);
     return;
   }
 });
@@ -41,8 +78,7 @@ const getUserData = async (token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    res.status(500).json({ message: error });
-    return;
+    return { message: error };
   }
 };
 
@@ -59,8 +95,7 @@ const getUserCategories = async (token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    res.status(500).json({ message: error });
-    return;
+    return { message: error };
   }
 };
 
@@ -68,14 +103,14 @@ app.get('/api/auth/user/:code', async (req, res) => {
   const code = req.params.code;
 
   const response = await getUserData(code);
-  res.send({ response });
+  res.status(response.message ? 500 : 200).send({ response });
 });
 
 app.get('/api/auth/categories/:code', async (req, res) => {
   const code = req.params.code;
 
   const response = await getUserCategories(code);
-  res.send({ response });
+  res.status(response.message ? 500 : 200).send({ response });
 });
 
 async function handleResponse(response) {

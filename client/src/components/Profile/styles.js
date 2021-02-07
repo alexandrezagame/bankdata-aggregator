@@ -6,6 +6,7 @@ export default makeStyles((theme) => ({
     display: 'flex',
   },
   appBar: {
+    backgroundColor: '#427982',
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,

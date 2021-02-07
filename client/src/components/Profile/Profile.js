@@ -5,6 +5,7 @@ import Emoji from '../emoji';
 import clsx from 'clsx';
 
 import { mode } from '../../utils/mode';
+import authService from '../../services/authService';
 import { useHistory } from 'react-router-dom';
 import {
   filterDataType,
@@ -15,6 +16,7 @@ import TotalExpenses from '../TotalExpenses/TotalExpenses';
 import RecurrentMerchant from '../RecurrentMerchant/RecurrentMerchant';
 import TopMerchants from '../TopMerchants/TopMerchants';
 import MerchantsPerCategory from '../MerchantsPerCategory/MerchantsPerCategory';
+import Charts from '../Charts/Charts';
 
 import {
   Drawer,
@@ -32,6 +34,7 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
+  Button,
 } from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -65,7 +68,7 @@ const Profile = () => {
     setShowHighestSpendingMerchants,
   ] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -75,25 +78,30 @@ const Profile = () => {
     setOpen(false);
   };
 
+  const logoutAndEraseToken = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    history.push('/');
+  };
+
   useEffect(() => {
     try {
       const parsed = queryString.parse(window.location.search);
-      const fetchCode = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:8080/api/auth/${parsed.code}`
-          );
-          if (!response.ok) throw await response.json();
-          const data = await response.json();
 
-          setToken(data.access_token);
-          return data.access_token;
-        } catch (error) {
-          history.push('/');
-        }
-      };
       const fetchInitialData = async () => {
-        const accessToken = await fetchCode();
+        let dateData;
+        let accessToken;
+
+        if (sessionStorage.getItem('access_token')) {
+          accessToken = sessionStorage.getItem('access_token');
+        } else {
+          accessToken = await authService.getAccessToken(parsed.code);
+        }
+
+        if (!accessToken) return history.push('/');
+        setToken(accessToken);
+        dateData = await fetchData('user', accessToken);
+
         const categoryData = await fetchData('categories', accessToken);
 
         const filteredExpenses = filterDataType(
@@ -104,7 +112,6 @@ const Profile = () => {
         let filtered = filteredExpenses.filter(
           ({ primaryName }, index) => !listCat.includes(primaryName, index + 1)
         );
-        const dateData = await fetchData('user', accessToken);
         const startDate = new Date(
           dateData.response[dateData.response.length - 1].originalDate
         ).toLocaleDateString('en-GB');
@@ -137,19 +144,21 @@ const Profile = () => {
     });
     const merchant = {};
     merchantCategory.forEach(function (d) {
-      if (merchant.hasOwnProperty(d.description)) {
-        merchant[d.description] = merchant[d.description] + d.amount;
+      if (d.description in merchant) {
+        merchant[d.description] += Math.abs(d.amount);
       } else {
-        merchant[d.description] = d.amount;
+        merchant[d.description] = Math.abs(d.amount);
       }
     });
+    console.log(merchantCategory);
+    console.log(merchant);
 
     const combinedAmountOfMerchant = [];
 
-    for (const prop in merchant) {
-      combinedAmountOfMerchant.push({ name: prop, value: merchant[prop] });
-    }
-    setMerchantByCategory(combinedAmountOfMerchant);
+    // for (const prop in merchant) {
+    //   combinedAmountOfMerchant.push({ name: prop, value: merchant[prop] });
+    // }
+    setMerchantByCategory(merchant);
   };
 
   const getTotalExpenses = async (token) => {
@@ -157,11 +166,20 @@ const Profile = () => {
 
     const filteredExpenses = filterDataCategoryType(data.response, 'EXPENSES');
 
-    const totalExp = filteredExpenses.reduce((a, b) => {
-      return a + b.amount;
-    }, 0);
-    const convertedTotalExp = Math.abs(totalExp).toFixed(0);
-    setExpenses(convertedTotalExp);
+    const totalExp = filteredExpenses.reduce((expensesByCategory, expense) => {
+      const categoriesName =
+        categories.find((c) => c.id === expense.categoryId)?.primaryName ??
+        'Other';
+      // console.log('expense', expense);
+      if (!expensesByCategory[categoriesName]) {
+        expensesByCategory[categoriesName] = 0;
+      }
+
+      expensesByCategory[categoriesName] += Math.abs(expense.amount);
+      return expensesByCategory;
+    }, {});
+
+    setExpenses(totalExp);
   };
 
   const getReccurentMerchant = async (token) => {
@@ -366,6 +384,9 @@ const Profile = () => {
               </FormControl>
             </ListItem>
           </List>
+          <Button className={classes.logout} onClick={logoutAndEraseToken}>
+            Logout
+          </Button>
         </Drawer>
 
         <main
@@ -385,12 +406,12 @@ const Profile = () => {
               </div>
               <div>
                 <div className={classes.merchantsCards}>
-                  {merchantByCategory.map((list) => {
+                  {Object.keys(merchantByCategory).map((key) => {
                     return (
                       <MerchantsPerCategory
-                        name={list.name}
-                        value={list.value}
-                        key={list.value}
+                        name={key}
+                        value={merchantByCategory[key]}
+                        key={key}
                       />
                     );
                   })}
@@ -407,7 +428,16 @@ const Profile = () => {
                   <Emoji symbol="💸" label="Money with Wings" />
                 </h3>
               </div>
-              <TotalExpenses expenses={expenses} />
+              <TotalExpenses
+                expenses={Object.values(expenses).reduce(
+                  (totalExp, expensesByCategory) =>
+                    (totalExp += expensesByCategory),
+                  0
+                )}
+              />
+              {Object.keys(expenses).length && (
+                <Charts title="Merchant in the category" datasets={expenses} />
+              )}
             </>
           )}
 

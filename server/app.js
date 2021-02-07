@@ -108,7 +108,6 @@ app.get('/api/auth/user/:code', async (req, res) => {
 
 app.get('/api/auth/categories/:code', async (req, res) => {
   const code = req.params.code;
-
   const response = await getUserCategories(code);
   res.status(response.message ? 500 : 200).send({ response });
 });

@@ -407,6 +407,9 @@ const Profile = () => {
               </FormControl>
             </ListItem>
           </List>
+          <Typography className={classes.copyright}>
+            ©Alex Zagame, 2021
+          </Typography>
           <Button
             variant="contained"
             color="secondary"

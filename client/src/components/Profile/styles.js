@@ -86,11 +86,17 @@ export default makeStyles((theme) => ({
   },
   logout: {
     position: 'absolute',
-    bottom: '1rem',
+    bottom: '2rem',
     left: '50%',
     transform: 'translate(-50%)',
   },
-
+  copyright: {
+    position: 'absolute',
+    bottom: '0',
+    left: '50%',
+    transform: 'translate(-50%)',
+    fontSize: '0.5rem',
+  },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,

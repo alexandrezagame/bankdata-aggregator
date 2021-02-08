@@ -17,6 +17,7 @@ import RecurrentMerchant from '../RecurrentMerchant/RecurrentMerchant';
 import TopMerchants from '../TopMerchants/TopMerchants';
 import MerchantsPerCategory from '../MerchantsPerCategory/MerchantsPerCategory';
 import Charts from '../Charts/Charts';
+import ProfileWelcome from '../ProfileWelcome/ProfileWelcome';
 
 import {
   Drawer,
@@ -62,6 +63,7 @@ const Profile = () => {
   const [token, setToken] = useState('');
   const [showExpenses, setShowExpenses] = useState(false);
   const [showRecurrentMerchant, setShowRecurrentMerchant] = useState(false);
+  const [showProfileWelcome, setShowProfileWelcome] = useState(true);
   const [showMerchant, setShowMerchant] = useState(false);
   const [
     showHighestSpendingMerchants,
@@ -239,6 +241,7 @@ const Profile = () => {
   const handleChange = (e) => {
     setShowHighestSpendingMerchants(false);
     setShowExpenses(false);
+    setShowProfileWelcome(false);
     setShowRecurrentMerchant(false);
     getMerchantByCategory(token, e.target.value);
     setShowMerchant(true);
@@ -285,7 +288,17 @@ const Profile = () => {
           }}
         >
           <div className={classes.drawerHeader}>
-            <img src={logo} className={classes.logo} />
+            <img
+              src={logo}
+              className={classes.logo}
+              onClick={() => {
+                setShowProfileWelcome(true);
+                setShowMerchant(false);
+                setShowHighestSpendingMerchants(false);
+                setShowRecurrentMerchant(false);
+                setShowExpenses(false);
+              }}
+            />
             <IconButton
               onClick={handleDrawerClose}
               className={classes.closingButton}
@@ -307,6 +320,7 @@ const Profile = () => {
               <ListItemIcon
                 onClick={() => {
                   setShowMerchant(false);
+                  setShowProfileWelcome(false);
                   setShowHighestSpendingMerchants(false);
                   setShowRecurrentMerchant(false);
                   getTotalExpenses(token);
@@ -327,6 +341,7 @@ const Profile = () => {
               <ListItemIcon
                 onClick={() => {
                   setShowExpenses(false);
+                  setShowProfileWelcome(false);
                   setShowHighestSpendingMerchants(false);
                   setShowMerchant(false);
                   getReccurentMerchant(token);
@@ -349,6 +364,7 @@ const Profile = () => {
               <ListItemIcon
                 onClick={() => {
                   setShowExpenses(false);
+                  setShowProfileWelcome(false);
                   setShowMerchant(false);
                   setShowRecurrentMerchant(false);
                   getHighestSpendingMerchants(token);
@@ -419,6 +435,8 @@ const Profile = () => {
               </div>
             </>
           )}
+
+          {showProfileWelcome && <ProfileWelcome />}
 
           {showExpenses && (
             <>

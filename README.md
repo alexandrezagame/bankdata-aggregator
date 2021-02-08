@@ -5,7 +5,7 @@ This is a web app integrating the Tink API to fetch users' account and transacti
 <img width="1440" alt="Screenshot 2021-02-08 at 16 34 49" src="https://user-images.githubusercontent.com/59875556/107241794-9cb24980-6a2b-11eb-8e73-bd6a5e42e009.png">
 
 ## Technologies used: 
-React and Material UI for frontend
+React, Material UI, Chartjs for frontend
 </br>
 Node and Express for backend
 </br>

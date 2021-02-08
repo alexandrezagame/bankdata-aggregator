@@ -5,19 +5,19 @@ export default makeStyles((theme) => ({
     width: '14.375rem',
     margin: '1rem',
     // backgroundColor: '#427982',
-    backgroundColor: '#FCFCFC',
-
+    backgroundColor: '#F89672',
+    borderRadius: '15px 0 15px 0',
     minHeight: '16.625rem',
     position: 'relative',
     boxShadow:
       '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
   },
   information: {
-    color: '#427982',
+    color: '#fff',
   },
   merchantTitle: {
     fontSize: '1rem',
-    color: '#F89672',
+    color: '#427982',
     textTransform: 'uppercase',
     textAlign: 'center',
   },
@@ -44,5 +44,15 @@ export default makeStyles((theme) => ({
     backgroundSize: 'contain',
     backgroundPosition: 'top center',
     objectFit: 'contain',
+  },
+  noinfodiv: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    color: '#427982',
+  },
+  noinfo: {
+    width: 'auto',
+    height: '70vh',
   },
 }));

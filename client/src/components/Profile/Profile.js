@@ -256,7 +256,7 @@ const Profile = () => {
             [classes.appBarShift]: open,
           })}
         >
-          <Toolbar style={{ backgroundColor: '#427982' }}>
+          <Toolbar style={{ backgroundColor: '#427982', textAlign: 'center' }}>
             <IconButton
               aria-label="open drawer"
               onClick={handleDrawerOpen}

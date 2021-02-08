@@ -15,11 +15,12 @@ const ProfileWelcome = () => {
           className={classes.cardInformation}
         >
           <h3>
-            This is a web app integrating the Tink API to fetch users' account
-            and transaction data.
+            This is a web app integrating the{' '}
+            <b className={classes.info}>Tink API</b> to fetch users' account and
+            transaction data.
           </h3>
           <p>
-            Click on the different sections on the side menu to display the
+            Click on the different sections of the side menu to display the
             information available.
           </p>
         </Typography>

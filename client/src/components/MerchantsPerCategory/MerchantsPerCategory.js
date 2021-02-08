@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Card, CardContent, CardMedia } from '@material-ui/core';
 import useStyles from './styles';
+import noinfo from '../../assets/bike.svg';
 
 const MerchantsPerCategory = ({ name, value }) => {
   const classes = useStyles();
@@ -36,7 +37,16 @@ const MerchantsPerCategory = ({ name, value }) => {
           </CardContent>
         </Card>
       ) : (
-        <p>No information available!</p>
+        <>
+          <div className={classes.noinfodiv}>
+            <Typography variant="h5">
+              Sorry, there is no information available.
+            </Typography>
+            <Typography variant="h6">Try another category.</Typography>
+
+            <img src={noinfo} alt="bike" className={classes.noinfo} />
+          </div>
+        </>
       )}
     </>
   );

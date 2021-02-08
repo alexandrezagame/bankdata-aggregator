@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
   container: {
     width: '14.375rem',
-
+    borderRadius: '15px 0 15px 0',
     margin: '1rem',
     backgroundColor: '#427982',
     padding: '1rem',

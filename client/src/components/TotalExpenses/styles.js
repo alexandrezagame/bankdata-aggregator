@@ -7,6 +7,7 @@ export default makeStyles((theme) => ({
     width: '50vw',
     padding: '16px',
     margin: '0 auto',
+    borderRadius: '15px 0 15px 0',
     boxShadow:
       '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
     [theme.breakpoints.down('sm')]: {

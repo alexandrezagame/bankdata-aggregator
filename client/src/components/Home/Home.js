@@ -34,8 +34,8 @@ const Home = () => {
   }, []);
 
   const fetchData = async () => {
-    // const data = await (await fetch(`${baseURLDev}/api/auth`)).json();
-    const data = await (await fetch(`${baseURLProd}/api/auth`)).json();
+    const data = await (await fetch(`${baseURLDev}/api/auth`)).json();
+    // const data = await (await fetch(`${baseURLProd}/api/auth`)).json();
 
     window.location = data.url;
   };

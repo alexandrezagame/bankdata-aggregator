@@ -41,6 +41,8 @@ export default makeStyles((theme) => ({
     marginBottom: '2rem',
     left: '50%',
     transform: 'translateX(-50%)',
+    backgroundSize: 'contain',
+    backgroundPosition: 'top center',
     objectFit: 'contain',
   },
 }));

@@ -7,7 +7,7 @@ export default makeStyles((theme) => ({
     margin: '1rem',
     backgroundColor: '#427982',
     padding: '1rem',
-    minHeight: '16.625rem',
+    minHeight: '19.625rem',
     position: 'relative',
     boxShadow:
       '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
@@ -20,6 +20,7 @@ export default makeStyles((theme) => ({
     color: '#F89672',
     textTransform: 'uppercase',
     textAlign: 'center',
+    marginBottom: '10rem',
   },
   merchantDescription: {
     fontSize: '1rem',
@@ -41,11 +42,8 @@ export default makeStyles((theme) => ({
     marginBottom: '2rem',
     left: '50%',
     transform: 'translateX(-50%)',
-  },
-  MuiAvatar: {
-    img: {
-      // handle correctly non-square images
-      objectFit: 'contain !important',
-    },
+    backgroundSize: 'contain',
+    backgroundPosition: 'top center',
+    objectFit: 'contain',
   },
 }));

@@ -43,6 +43,7 @@ export default makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
+    position: 'relative',
   },
   drawerHeader: {
     display: 'flex',
@@ -72,10 +73,22 @@ export default makeStyles((theme) => ({
     width: '110px',
     height: 'auto',
     margin: '0 auto',
+    cursor: 'pointer',
   },
   banner: {
+    display: 'flex',
+    alignItems: 'center',
     margin: '0 auto',
     backgroundColor: '#427982',
+  },
+  bannerDate: {
+    color: '#F89672',
+  },
+  logout: {
+    position: 'absolute',
+    bottom: '1rem',
+    left: '50%',
+    transform: 'translate(-50%)',
   },
 
   formControl: {

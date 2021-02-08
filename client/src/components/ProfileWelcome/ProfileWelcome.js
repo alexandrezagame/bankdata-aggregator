@@ -1,6 +1,7 @@
 import React from 'react';
 import { CardContent, Card, Typography } from '@material-ui/core';
 import useStyles from './styles';
+import welcomeImage from '../../assets/welcomeimage.svg';
 
 const ProfileWelcome = () => {
   const classes = useStyles();
@@ -22,6 +23,11 @@ const ProfileWelcome = () => {
             information.
           </p>
         </Typography>
+        <img
+          src={welcomeImage}
+          alt="welcome Image"
+          className={classes.welcomeImage}
+        />
       </CardContent>
     </Card>
   );

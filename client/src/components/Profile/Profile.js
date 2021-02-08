@@ -144,7 +144,7 @@ const Profile = () => {
     const merchantCategory = filteredExpenses.filter((item) => {
       return item.categoryId === categoryId;
     });
-    const merchant = {};
+    let merchant = {};
     merchantCategory.forEach(function (d) {
       if (d.description in merchant) {
         merchant[d.description] += Math.abs(d.amount);
@@ -152,14 +152,12 @@ const Profile = () => {
         merchant[d.description] = Math.abs(d.amount);
       }
     });
-    console.log(merchantCategory);
-    console.log(merchant);
 
-    const combinedAmountOfMerchant = [];
+    // const combinedAmountOfMerchant = [];
+    if (Object.keys(merchant).length === 0) {
+      merchant = { error: 'error' };
+    }
 
-    // for (const prop in merchant) {
-    //   combinedAmountOfMerchant.push({ name: prop, value: merchant[prop] });
-    // }
     setMerchantByCategory(merchant);
   };
 
@@ -172,7 +170,6 @@ const Profile = () => {
       const categoriesName =
         categories.find((c) => c.id === expense.categoryId)?.primaryName ??
         'Other';
-      // console.log('expense', expense);
       if (!expensesByCategory[categoriesName]) {
         expensesByCategory[categoriesName] = 0;
       }
@@ -271,8 +268,14 @@ const Profile = () => {
             <Typography variant="h6" wrap className={classes.banner}>
               {timestampInfo.startDate && (
                 <div className={classes.bannerText}>
-                  Displaying data collected from {timestampInfo.startDate} until{' '}
-                  {timestampInfo.endDate}
+                  Displaying data collected from{' '}
+                  <span className={classes.bannerDate}>
+                    {timestampInfo.startDate}
+                  </span>{' '}
+                  until{' '}
+                  <span className={classes.bannerDate}>
+                    {timestampInfo.endDate}
+                  </span>
                 </div>
               )}
             </Typography>
@@ -404,7 +407,12 @@ const Profile = () => {
               </FormControl>
             </ListItem>
           </List>
-          <Button className={classes.logout} onClick={logoutAndEraseToken}>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.logout}
+            onClick={logoutAndEraseToken}
+          >
             Logout
           </Button>
         </Drawer>

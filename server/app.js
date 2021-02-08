@@ -13,7 +13,7 @@ const baseURL = 'https://api.tink.com/api/v1';
 
 app.get('/api/auth', (req, res) => {
   res.send({
-    url: `https://link.tink.com/1.0/authorize/?client_id=${CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fprofile&market=SE&locale=en_US&scope=accounts:read,investments:read,transactions:read,user:read,statistics:read,identity:read,credentials:read`,
+    url: `https://link.tink.com/1.0/authorize/?client_id=${CLIENT_ID}&redirect_uri=https%3A%2F%2Fmonity.netlify.app%2Fprofile&market=SE&locale=en_US&scope=accounts:read,investments:read,transactions:read,user:read,statistics:read,identity:read,credentials:read`,
   });
 });
 
@@ -142,7 +142,6 @@ async function getAccessToken(code) {
   return handleResponse(response);
 }
 
-const PORT = 8080;
-app.listen(PORT, () => {
-  console.log('Server running on port' + PORT);
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`App up and running!`);
 });

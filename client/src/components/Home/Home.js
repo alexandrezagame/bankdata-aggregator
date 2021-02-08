@@ -9,9 +9,15 @@ import {
 // import { MenuIcon } from '@material-ui/icons';
 import useStyles from './styles';
 import Emoji from '../emoji';
-import authService from '../../services/authService';
+import {
+  getAccessToken,
+  getAccessTokenFromRefresh,
+} from '../../services/authService';
 import { useHistory } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+const baseURLDev = 'http://localhost:8080';
+const baseURLProd = 'https://monity-backend.herokuapp.com';
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -20,7 +26,7 @@ const Home = () => {
   const classes = useStyles();
 
   useEffect(async () => {
-    const token = await authService.getAccessTokenFromRefresh();
+    const token = await getAccessTokenFromRefresh();
     setLoading(false);
     if (token) {
       history.push('/profile');
@@ -28,7 +34,7 @@ const Home = () => {
   }, []);
 
   const fetchData = async () => {
-    const data = await (await fetch('http://localhost:8080/api/auth')).json();
+    const data = await (await fetch(`${baseURLProd}/api/auth`)).json();
 
     window.location = data.url;
   };

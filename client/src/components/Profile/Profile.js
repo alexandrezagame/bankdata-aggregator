@@ -5,7 +5,7 @@ import Emoji from '../emoji';
 import clsx from 'clsx';
 
 import { mode } from '../../utils/mode';
-import authService from '../../services/authService';
+import { getAccessToken } from '../../services/authService';
 import { useHistory } from 'react-router-dom';
 import {
   filterDataType,
@@ -97,7 +97,7 @@ const Profile = () => {
         if (sessionStorage.getItem('access_token')) {
           accessToken = sessionStorage.getItem('access_token');
         } else {
-          accessToken = await authService.getAccessToken(parsed.code);
+          accessToken = await getAccessToken(parsed.code);
         }
 
         if (!accessToken) return history.push('/');
@@ -253,12 +253,13 @@ const Profile = () => {
         <CssBaseline />
 
         <AppBar
+          style={{ backgroundColor: '#427982' }}
           position="fixed"
           className={clsx(classes.appBar, {
             [classes.appBarShift]: open,
           })}
         >
-          <Toolbar>
+          <Toolbar style={{ backgroundColor: '#427982' }}>
             <IconButton
               aria-label="open drawer"
               onClick={handleDrawerOpen}
@@ -387,7 +388,10 @@ const Profile = () => {
                   Categories
                 </InputLabel>
                 {categories.length > 1 ? (
-                  <Select onChange={handleChange}>
+                  <Select
+                    onChange={handleChange}
+                    className={classes.formSelect}
+                  >
                     {categories.map((category) => (
                       <MenuItem key={category.id} value={category.id}>
                         {category.primaryName}

@@ -12,6 +12,9 @@ export default makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
+  toolbar: {
+    backgroundColor: '#427982',
+  },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
@@ -72,11 +75,15 @@ export default makeStyles((theme) => ({
   },
   banner: {
     margin: '0 auto',
+    backgroundColor: '#427982',
   },
 
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
+  },
+  formSelect: {
+    width: '150px',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),

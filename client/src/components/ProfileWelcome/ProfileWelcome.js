@@ -14,13 +14,13 @@ const ProfileWelcome = () => {
           component="h5"
           className={classes.cardInformation}
         >
-          <p>
-            Welcome to this app where you can look into the different data
-            collected from your bank:
-          </p>
+          <h3>
+            This is a web app integrating the Tink API to fetch users' account
+            and transaction data.
+          </h3>
           <p>
             Click on the different sections on the side menu to display the
-            information.
+            information available.
           </p>
         </Typography>
         <img

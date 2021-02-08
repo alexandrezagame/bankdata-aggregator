@@ -7,16 +7,17 @@ export default makeStyles((theme) => ({
     width: '50vw',
     padding: '16px',
     margin: '0 auto',
+    border: 'none',
+
+    boxShadow:
+      '0px 0px 0px 0px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 0), 0px 0px 0px 0px rgb(0 0 0 0)',
 
     [theme.breakpoints.down('sm')]: {
       width: 'auto',
     },
-
-    boxShadow:
-      '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
   },
   welcomeImage: {
-    width: '50%',
+    width: '80%',
     height: 'auto',
     margin: '0 auto',
     [theme.breakpoints.down('sm')]: {
@@ -24,7 +25,7 @@ export default makeStyles((theme) => ({
     },
   },
   cardsContent: {
-    textAlign: 'justify',
+    textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {

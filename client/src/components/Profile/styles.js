@@ -75,6 +75,12 @@ export default makeStyles((theme) => ({
     margin: '0 auto',
     cursor: 'pointer',
   },
+  tinklink: {
+    fontSize: '0.8rem',
+    paddingTop: '0.2rem',
+    margin: '0 auto',
+    color: '#F89672',
+  },
   banner: {
     display: 'flex',
     alignItems: 'center',
@@ -95,7 +101,7 @@ export default makeStyles((theme) => ({
     bottom: '0',
     left: '50%',
     transform: 'translate(-50%)',
-    fontSize: '0.5rem',
+    fontSize: '0.6rem',
   },
   formControl: {
     margin: theme.spacing(1),

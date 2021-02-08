@@ -317,7 +317,9 @@ const Profile = () => {
           <Divider />
 
           <Divider />
-
+          <Typography className={classes.tinklink}>
+            Brought to you by the Tink API.
+          </Typography>
           <List>
             <ListItem button>
               <MonetizationOnIcon />
@@ -431,7 +433,7 @@ const Profile = () => {
             <>
               <div className={classes.sectionTitle}>
                 <h3>
-                  Your favorite merchants in this category:{' '}
+                  Favorite merchants in this category:{' '}
                   <Emoji symbol="❤️‍🔥" label="Heart on Fire" />
                 </h3>
               </div>
@@ -457,8 +459,7 @@ const Profile = () => {
             <>
               <div className={classes.sectionTitle}>
                 <h3>
-                  Your total expenses in the collected period:{' '}
-                  <Emoji symbol="💸" label="Money with Wings" />
+                  Total expenses: <Emoji symbol="💸" label="Money with Wings" />
                 </h3>
               </div>
               <TotalExpenses
@@ -496,7 +497,7 @@ const Profile = () => {
               <div className={classes.sectionTitle}>
                 <h3>
                   Top 5 merchants with highest spendings:{' '}
-                  <Emoji symbol="🔝" label="Top Arrow" />
+                  <Emoji symbol="💲" label="Heavy dollar sign" />
                 </h3>
               </div>
               <div className={classes.merchantsCards}>

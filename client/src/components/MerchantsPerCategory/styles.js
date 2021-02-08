@@ -11,6 +11,9 @@ export default makeStyles((theme) => ({
     position: 'relative',
     boxShadow:
       '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    [theme.breakpoints.down('sm')]: {
+      width: 'auto',
+    },
   },
   information: {
     color: '#fff',
@@ -54,5 +57,9 @@ export default makeStyles((theme) => ({
   noinfo: {
     width: 'auto',
     height: '70vh',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: 'auto',
+    },
   },
 }));

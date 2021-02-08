@@ -10,13 +10,17 @@ The application requires a Tink API developer account.
 
 Install the dependencies: $ npm install
 Set your client identifier and client secret into a .env file in your server folder:
+<br/>
 TINK_CLIENT_ID="<YOUR_CLIENT_ID>"
+<br/>
 TINK_SECRET_KEY="<YOUR_CLIENT_SECRET>"
 
 ### Change to baseURLDev in the following files:
 
 client > src > api > api.js
+<br/>
 client > src > Home > Home.js
+<br/>
 client > src > services > authServices.js
 
 ### Change the url in the Server folder to redirect to either localhost or your own frontend domain:

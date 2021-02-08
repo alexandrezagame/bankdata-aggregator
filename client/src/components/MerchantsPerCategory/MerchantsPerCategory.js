@@ -25,7 +25,7 @@ const MerchantsPerCategory = ({ name, value }) => {
             <CardMedia>
               <img
                 className={classes.images}
-                src={`https://logo.clearbit.com/${firstWord}.com?size=100`}
+                src={`https://logo.clearbit.com/${firstWord}.com?`}
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src =

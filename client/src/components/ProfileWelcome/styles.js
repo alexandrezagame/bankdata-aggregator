@@ -27,6 +27,7 @@ export default makeStyles((theme) => ({
     margin: '0 auto',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
+      height: 'auto',
     },
   },
   cardsContent: {
